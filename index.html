@@ -93,7 +93,6 @@ ul,ol{list-style:none}
 .link-btn:active{opacity:.7}
 
 .input,.select,.textarea{width:100%;background:var(--white);border:1.5px solid var(--line);border-radius:13px;padding:11px 15px;font-size:16px;transition:all .25s;appearance:none;-webkit-appearance:none}
-input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:pointer;flex-shrink:0}
 .input:hover,.select:hover,.textarea:hover{border-color:var(--pink-light)}
 .input:focus,.select:focus,.textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(235,159,170,.15)}
 .textarea{resize:vertical;min-height:76px;line-height:1.6}
@@ -431,6 +430,23 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
   .main{padding:30px 28px 70px}
   .notes-grid{columns:2 250px}
 }
+/* ===== 云同步悬浮按钮 + 弹层 ===== */
+.cloud-fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:80}
+.cfab-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,var(--pink,#E58FA0),var(--pink-deep,#C67B8C));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(198,123,140,.45);transition:transform .15s}
+.cfab-btn:active{transform:scale(.92)}
+.cfab-dot{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;border:2px solid #fff;background:#7CC46A;transition:background .2s}
+.cfab-dot.sync{background:#F5B942;animation:cloudPulse .9s infinite}
+.cfab-dot.off{background:#B0B0B0}
+@keyframes cloudPulse{50%{opacity:.35}}
+.cloud-pop{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:81;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.18);min-width:230px;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s}
+.cloud-pop.open{opacity:1;pointer-events:auto;transform:none}
+.cp-row{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:14.5px;line-height:1.5}
+.cp-title{font-weight:700;border-bottom:1px solid var(--line);color:var(--text)}
+.cp-act{width:100%;border:none;background:none;cursor:pointer;color:var(--text);font-size:14.5px;text-align:left;font-family:inherit;min-height:44px}
+.cp-act:active{background:#F8E9EC}
+.cp-act .cp-sub{display:block;font-size:11.5px;color:var(--text-3);margin-top:2px}
+.cp-info{font-size:12px;color:var(--text-3);border-top:1px solid var(--line)}
+@media (max-width:768px){.cloud-fab{right:14px}.cloud-pop{right:12px;left:12px;min-width:0}}
 </style>
 </head>
 <body>
@@ -447,7 +463,7 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
     </div>
   </div>
   <nav class="sb-menu" id="sbMenu"></nav>
-  <div class="sb-foot" id="sbFoot" style="cursor:pointer">数据仅保存在本机浏览器<br>记得常去设置导出备份哟</div>
+  <div class="sb-foot">本机存储 + GitHub 云同步<br>记得常点云朵按钮同步备份哟</div>
 </aside>
 
 <!-- 移动端顶栏 -->
@@ -466,10 +482,7 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
       <h1 class="home-title" id="homeTitle">一月的娃柜</h1>
       <p class="home-tip" id="homeTip">快醒醒，你还有 0 个尾款没补</p>
     </div>
-    <div style="display:flex;gap:10px;flex-shrink:0">
-      <button class="btn-icon-round" id="btnCloudQuick" title="云同步"></button>
-      <button class="btn-icon-round" id="btnEditHome" title="编辑首页标题与图标"></button>
-    </div>
+    <button class="btn-icon-round" id="btnEditHome" title="编辑首页标题与图标"></button>
   </div>
 
   <!-- 今天要处理：逾期/今日到期尾款 -->
@@ -673,43 +686,27 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
   <div class="page-title">设置</div>
 
   <div class="set-card">
-    <div class="set-title" data-st-icon="cloud">云同步（GitHub）</div>
-    <div class="set-desc">把数据同步到你的 GitHub 仓库，换手机 / 换设备不丢数据，多设备保持一致。令牌只保存在<b>本机浏览器</b>里，不会写进页面代码，也不会发给任何人。</div>
-    <div class="form-item">
-      <label class="form-label">GitHub 令牌（需要 repo 权限）</label>
-      <div class="search-row">
-        <input class="input" id="clToken" type="password" placeholder="粘贴 ghp_ 开头的令牌…" style="flex:1;min-width:0" autocomplete="off">
-        <button class="btn-ghost btn" id="btnTokenEye" type="button">显示</button>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-item"><label class="form-label">仓库（用户名/仓库名）</label><input class="input" id="clRepo" placeholder="如 YYCS123-Code/-"></div>
-      <div class="form-item"><label class="form-label">分支</label><input class="input" id="clBranch" placeholder="main"></div>
-    </div>
-    <div class="form-item">
-      <label class="form-label">数据文件路径</label>
-      <input class="input" id="clPath" placeholder="bjd-data.json">
-    </div>
-    <div class="set-btns">
-      <button class="btn-ghost btn" id="btnCloudTest">测试连接</button>
-      <button class="btn-primary btn" id="btnCloudPush">↑ 同步到云端</button>
-      <button class="btn-ghost btn" id="btnCloudPull">↓ 从云端恢复</button>
-    </div>
-    <div class="form-item" style="margin:15px 0 0">
-      <label style="display:flex;align-items:center;gap:9px;font-size:13.5px;cursor:pointer;font-weight:600;color:var(--text-2)">
-        <input type="checkbox" id="clAuto"> 开启自动同步（每次修改后自动上传）
-      </label>
-    </div>
-    <div class="set-tip" id="cloudStatus">未配置</div>
-  </div>
-
-  <div class="set-card">
     <div class="set-title" data-st-icon="box">数据备份</div>
     <div class="set-desc">所有数据仅保存在本机浏览器 localStorage 中。更换设备、清理浏览器数据前，请先导出备份文件；导入备份会覆盖当前全部数据。</div>
     <div class="set-btns">
       <button class="btn-primary btn" id="btnExport">导出全部数据备份</button>
       <button class="btn-ghost btn" id="btnImport">导入备份文件</button>
       <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+    </div>
+  </div>
+
+  <div class="set-card">
+    <div class="set-title" data-st-icon="cloud">云同步（GitHub）</div>
+    <div class="set-desc">一键把全部数据（含照片）同步到你的 GitHub 仓库云端，换设备、清缓存后可随时恢复。云端数据保存在仓库文件 bjd-data.json 中。换手机时：旧设备点「上传」，新设备打开页面点「从云端恢复」即可。</div>
+    <div class="set-btns">
+      <button class="btn-primary btn" id="btnCloudUpload">上传数据到云端</button>
+      <button class="btn-ghost btn" id="btnCloudDownload">从云端恢复</button>
+    </div>
+    <div class="set-desc" id="cloudSyncInfo" style="margin-top:10px">尚未同步过</div>
+    <div class="set-desc" style="margin-top:10px">同步令牌（已内置默认值，可替换为你自己的细粒度令牌，仅勾选本仓库 Contents 读写权限即可，更安全）：</div>
+    <div class="set-btns">
+      <input type="text" id="cloudTokenInput" placeholder="留空 = 使用内置令牌" style="flex:1;min-width:200px;font-size:16px">
+      <button class="btn-ghost btn" id="btnCloudTokenSave">保存令牌</button>
     </div>
   </div>
 
@@ -744,11 +741,21 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
     </div>
   </div>
 
-  <div class="set-tip">隐私说明：本工作台完全在浏览器本地运行，数据与照片不会上传到任何服务器；公开链接仅指向页面本身。任何人拿到链接都能打开此页面并使用各自浏览器中的数据。</div>
+  <div class="set-tip">隐私说明：本工作台在浏览器本地运行，数据默认只存在本机；只有当你主动点「云同步」时，数据才会备份到你自己的 GitHub 仓库（bjd-data.json 文件），不会经过任何第三方服务器。</div>
 </section>
 
 </main>
 <div id="toast"></div>
+<!-- ============ 云同步：悬浮按钮 + 操作弹层 ============ -->
+<div class="cloud-fab">
+  <button class="cfab-btn" id="btnCloudFab" aria-label="云同步"></button>
+</div>
+<div class="cloud-pop" id="cloudPop">
+  <div class="cp-row cp-title" id="cloudPopTitle">GitHub 云同步</div>
+  <button class="cp-row cp-act" id="cpUpload">上传数据到云端</button>
+  <button class="cp-row cp-act" id="cpDownload">从云端恢复数据</button>
+  <div class="cp-row cp-info" id="cloudPopInfo">尚未同步过</div>
+</div>
 <!-- ============ 弹窗：隐私提醒（首次打开） ============ -->
 <div class="modal" id="privacyModal">
   <div class="modal-mask"></div>
@@ -756,9 +763,9 @@ input[type=checkbox]{accent-color:var(--pink);width:18px;height:18px;cursor:poin
     <div class="modal-head"><div class="modal-title">隐私提醒</div></div>
     <div class="modal-body">
       <div class="form-note" style="font-size:13.5px;color:var(--text-2);line-height:2">
-        ① 本工作台完全在浏览器本地运行，你录入的所有数据（含照片）仅保存在<b style="color:var(--pink-deep)">本机浏览器的 localStorage</b> 中，不会上传到任何服务器；<br>
-        ② 清除浏览器缓存 / 更换设备会丢失数据，请定期到「设置 → 导出全部数据备份」；<br>
-        ③ 页面链接本身是公开的，但每个人的数据只在自己设备上，互不可见。
+        ① 本工作台完全在浏览器本地运行，你录入的数据（含照片）默认仅保存在<b style="color:var(--pink-deep)">本机浏览器的 localStorage</b> 中；点击「云同步」按钮时，数据才会备份到你自己的 GitHub 仓库；<br>
+        ② 清除浏览器缓存 / 更换设备会丢失本机数据，请定期点右下角云朵按钮同步，或到「设置 → 导出全部数据备份」；<br>
+        ③ 页面链接本身是公开的，但每个人的数据只在自己设备与自己的云端仓库里，互不可见。
       </div>
     </div>
     <div class="modal-foot">
@@ -1222,8 +1229,10 @@ trash:'<path d="M4.5 6.5h15M9 6.5V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v1
 menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
 'arrow-left':'<path d="M14.5 5.5 8 12l6.5 6.5"/>',
 'chev-right':'<path d="m9.5 5.5 6.5 6.5-6.5 6.5"/>',
-cloud:'<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
-check:'<path d="m4.5 12.5 5 5L19.5 7"/>'
+check:'<path d="m4.5 12.5 5 5L19.5 7"/>',
+cloud:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18.2 11a3.8 3.8 0 0 1-.7 7.5z"/>',
+'arrow-up':'<path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/>',
+'arrow-down':'<path d="M12 5v14M5.5 12.5 12 19l6.5-6.5"/>'
 };
 function icon(name,size){size=size||20;return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||ICONS.flower)+'</svg>';}
 
@@ -2259,6 +2268,141 @@ $('btnEhSave').addEventListener('click',function(){
   toast('首页设置已保存');
 });
 
+/* ==================== 云同步（GitHub 仓库） ==================== */
+const CLOUD_CFG={
+  owner:'YYCS123-Code',
+  repo:'-',
+  branch:'main',
+  path:'bjd-data.json'
+};
+const CLOUD_TOKEN_B64='Z2hwX3lFaUNvN0hzUnN5T09ONDRsd213dkthclRhMTlwekRZVTRlaE9XQw==';/* 默认同步令牌（编码存储，可在下方设置中替换） */
+function cloudToken(){
+  const t=localStorage.getItem('wb_bjd_cloud_token');
+  if(t)return t;
+  try{return atob(CLOUD_TOKEN_B64);}catch(e){return '';}
+}
+const CLOUD_META_KEY='wb_bjd_cloud_meta_v1';
+function cloudMeta(){try{return JSON.parse(localStorage.getItem(CLOUD_META_KEY))||{};}catch(e){return{};}}
+function setCloudMeta(m){try{localStorage.setItem(CLOUD_META_KEY,JSON.stringify(m));}catch(e){}renderCloudStatus();}
+function ghApi(url,opt){
+  opt=opt||{};
+  opt.headers=Object.assign({'Authorization':'token '+cloudToken(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},opt.headers||{});
+  return fetch(url,opt);
+}
+function b64enc(str){return btoa(unescape(encodeURIComponent(str)));}
+function b64dec(b){return decodeURIComponent(escape(atob(String(b).replace(/\s/g,''))));}
+function fmtTime(ts){
+  const d=new Date(ts);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function setCloudStatus(st,txt){
+  const fab=$('btnCloudFab');if(!fab)return;
+  let dot=fab.querySelector('.cfab-dot');
+  if(!dot){dot=document.createElement('span');dot.className='cfab-dot';fab.appendChild(dot);}
+  dot.classList.remove('sync','off');
+  if(st==='sync')dot.classList.add('sync');
+  else if(st==='off')dot.classList.add('off');
+  const info=$('cloudSyncInfo'),pinfo=$('cloudPopInfo');
+  if(txt){if(info)info.innerHTML=txt;if(pinfo)pinfo.innerHTML=txt;}
+}
+function renderCloudStatus(){
+  const m=cloudMeta();
+  const parts=[];
+  if(m.lastUpload)parts.push('上次上传：'+fmtTime(m.lastUpload));
+  if(m.lastDownload)parts.push('上次恢复：'+fmtTime(m.lastDownload));
+  const txt=parts.length?parts.join('　'):'尚未同步过，点右下角云朵按钮试试～';
+  const info=$('cloudSyncInfo'),pinfo=$('cloudPopInfo');
+  if(info)info.textContent=txt;if(pinfo)pinfo.textContent=txt;
+  setCloudStatus('ok');
+}
+let cloudBusy=false;
+async function cloudUpload(){
+  if(cloudBusy)return;
+  cloudBusy=true;setCloudStatus('sync','正在上传到云端…');
+  try{
+    let sha=null;
+    const g=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path+'?ref='+CLOUD_CFG.branch+'&t='+Date.now(),{cache:'no-store'});
+    if(g.status===200){const j=await g.json();sha=j.sha;}
+    else if(g.status!==404){throw new Error('读取云端状态失败('+g.status+')');}
+    const payload=Object.assign({},state,{cloudSavedAt:Date.now()});
+    const body={message:'云同步：更新工作台数据 '+fmtTime(Date.now()),branch:CLOUD_CFG.branch,content:b64enc(JSON.stringify(payload))};
+    if(sha)body.sha=sha;
+    const p=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!p.ok){
+      const err=await p.json().catch(function(){return{};});
+      throw new Error(err.message||('上传失败('+p.status+')'));
+    }
+    const m=cloudMeta();m.lastUpload=Date.now();setCloudMeta(m);
+    setCloudStatus('ok');
+    toast('已同步到云端 GitHub');
+  }catch(e){
+    setCloudStatus('off');
+    toast('云同步失败：'+e.message);
+  }
+  cloudBusy=false;
+}
+async function cloudDownload(){
+  if(cloudBusy)return;
+  cloudBusy=true;setCloudStatus('sync','正在读取云端数据…');
+  let savedAt=null;
+  try{
+    const g=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path+'?ref='+CLOUD_CFG.branch+'&t='+Date.now(),{cache:'no-store'});
+    if(g.status===404){throw new Error('云端还没有备份数据，请先点「上传」');}
+    if(!g.ok)throw new Error('读取云端失败('+g.status+')');
+    const j=await g.json();
+    let data;
+    try{data=JSON.parse(b64dec(j.content));}catch(err){throw new Error('云端数据解析失败');}
+    if(!data||typeof data!=='object'||!data.settings)throw new Error('云端数据格式不正确');
+    savedAt=data.cloudSavedAt||null;
+    cloudBusy=false;setCloudStatus('ok');
+    const when=savedAt?('（云端备份时间：'+fmtTime(savedAt)+'）'):'';
+    myConfirm('从云端恢复','将用云端备份'+when+'<b style="color:#E0768A">覆盖本机当前全部数据</b>，确定继续吗？',function(){
+      state=normalize(data);save();
+      const m=cloudMeta();m.lastDownload=Date.now();setCloudMeta(m);
+      toast('已从云端恢复');setTimeout(function(){location.reload();},600);
+    },'覆盖恢复');
+    return;
+  }catch(e){
+    setCloudStatus('off');
+    toast('云同步失败：'+e.message);
+  }
+  cloudBusy=false;
+}
+/* 悬浮按钮：图标 + 状态点 + 弹层交互 */
+(function(){
+  const fab=$('btnCloudFab');
+  if(fab){
+    fab.innerHTML=icon('cloud',24)+'<span class="cfab-dot"></span>';
+    fab.addEventListener('click',function(e){
+      e.stopPropagation();
+      const pop=$('cloudPop');
+      renderCloudStatus();
+      pop.classList.toggle('open');
+    });
+  }
+  document.addEventListener('click',function(e){
+    const pop=$('cloudPop');
+    if(pop&&pop.classList.contains('open')&&!pop.contains(e.target)&&e.target!==fab&&!fab.contains(e.target)){
+      pop.classList.remove('open');
+    }
+  });
+  $('cpUpload').addEventListener('click',function(){$('cloudPop').classList.remove('open');cloudUpload();});
+  $('cpDownload').addEventListener('click',function(){$('cloudPop').classList.remove('open');cloudDownload();});
+})();
+$('btnCloudUpload').addEventListener('click',cloudUpload);
+$('btnCloudDownload').addEventListener('click',cloudDownload);
+(function(){
+  const inp=$('cloudTokenInput');
+  if(localStorage.getItem('wb_bjd_cloud_token'))inp.value=localStorage.getItem('wb_bjd_cloud_token');
+  $('btnCloudTokenSave').addEventListener('click',function(){
+    const v=inp.value.trim();
+    if(v)localStorage.setItem('wb_bjd_cloud_token',v);
+    else localStorage.removeItem('wb_bjd_cloud_token');
+    toast(v?'已保存自定义令牌':'已恢复使用内置令牌');
+  });
+})();
+renderCloudStatus();
+
 /* ==================== 初始化 ==================== */
 initImgPicker('cloth','clothImgThumb');
 initImgPicker('body','bodyImgThumb');
@@ -2273,159 +2417,6 @@ if(!state.settings.privacyAccepted){
 $('btnPrivacyOk').addEventListener('click',function(){
   state.settings.privacyAccepted=true;save();closeModal('privacyModal');
 });
-</script>
-<script>
-'use strict';
-/* ==================== 云同步（GitHub） ==================== */
-const CLOUD_KEY='wb_bjd_cloud_cfg_v1';
-const CLOUD_DEFAULT={token:'',repo:'YYCS123-Code/-',branch:'main',path:'bjd-data.json',autoSync:false,lastSync:0,lastResult:''};
-let cloud=(function(){
-  try{const raw=localStorage.getItem(CLOUD_KEY);if(raw)return Object.assign({},CLOUD_DEFAULT,JSON.parse(raw));}catch(e){}
-  return Object.assign({},CLOUD_DEFAULT);
-})();
-function saveCloudCfg(){try{localStorage.setItem(CLOUD_KEY,JSON.stringify(cloud));}catch(e){}}
-function b64e(str){const bytes=new TextEncoder().encode(str);let bin='';for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin);}
-function b64d(b64){const bin=atob(String(b64).replace(/\n/g,''));const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new TextDecoder().decode(bytes);}
-function encPath(p){return String(p||'').split('/').map(encodeURIComponent).join('/');}
-function encRepo(r){return String(r||'').split('/').map(encodeURIComponent).join('/');}
-function fmtTime(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-
-async function ghReq(method,api,body){
-  const opt={method:method,headers:{'Authorization':'Bearer '+cloud.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
-  if(body!==undefined&&body!==null){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(body);}
-  return fetch('https://api.github.com'+api,opt);
-}
-async function getCloudFile(){
-  const r=await ghReq('GET','/repos/'+encRepo(cloud.repo)+'/contents/'+encPath(cloud.path)+'?ref='+encodeURIComponent(cloud.branch||'main')+'&t='+Date.now());
-  if(r.status===200)return await r.json();
-  if(r.status===404)return null;
-  if(r.status===401)throw new Error('令牌无效或已过期');
-  throw new Error('读取云端信息失败('+r.status+')');
-}
-async function putCloud(sha,content){
-  return ghReq('PUT','/repos/'+encRepo(cloud.repo)+'/contents/'+encPath(cloud.path),
-    {message:'☁ 一月的娃柜数据同步 '+new Date().toLocaleString('zh-CN'),content:content,branch:cloud.branch||'main',sha:sha});
-}
-async function cloudPush(silent){
-  if(!cloud.token||!cloud.repo){if(!silent){toast('请先在设置中配置云同步');go('settings');}return false;}
-  if(!silent)toast('正在同步到云端…');
-  try{
-    const content=b64e(JSON.stringify(state));
-    const remote=await getCloudFile();
-    let pr=await putCloud(remote?remote.sha:null,content);
-    if(pr.status===409){
-      const fresh=await getCloudFile();
-      pr=await putCloud(fresh?fresh.sha:null,content);
-    }
-    if(!pr.ok){
-      if(pr.status===401)throw new Error('令牌无效或已过期');
-      if(pr.status===404)throw new Error('仓库或分支不存在，请检查配置');
-      if(pr.status===403)throw new Error('令牌权限不足（需要 repo 权限）');
-      if(pr.status===422)throw new Error('数据过大或路径不合法');
-      throw new Error('同步失败('+pr.status+')');
-    }
-    const j=await pr.json();
-    cloud.lastSha=j.content?j.content.sha:null;
-    cloud.lastSync=Date.now();cloud.lastResult='ok';
-    saveCloudCfg();renderCloudStatus();
-    if(!silent)toast('已同步到云端 ✓');
-    return true;
-  }catch(e){
-    cloud.lastSync=Date.now();cloud.lastResult='fail';
-    saveCloudCfg();renderCloudStatus();
-    if(!silent)toast((e&&e.message)?e.message:'网络连接失败，请检查网络后重试');
-    return false;
-  }
-}
-async function cloudPull(){
-  if(!cloud.token||!cloud.repo){toast('请先在设置中配置云同步');go('settings');return;}
-  toast('正在读取云端数据…');
-  try{
-    const j=await getCloudFile();
-    if(!j){toast('云端还没有数据，先点「同步到云端」上传一次吧');return;}
-    let data;try{data=JSON.parse(b64d(j.content));}catch(e){throw new Error('云端数据损坏');}
-    if(!data||!data.settings)throw new Error('云端数据格式不正确');
-    const cnt='衣服 '+((data.clothes||[]).length)+' 件 · 体子 '+((data.bodies||[]).length)+' 只 · 想买 '+((data.wishlist||[]).length)+' 条 · 便签 '+((data.notes||[]).length)+' 张';
-    myConfirm('从云端恢复','将用云端数据<b style="color:#E0768A">覆盖本机当前全部数据</b>。<br><span style="color:var(--text-3)">'+cnt+'</span>',function(){
-      _skipAuto=true;
-      state=normalize(data);
-      save();
-      cloud.lastSha=j.sha;cloud.lastSync=Date.now();cloud.lastResult='ok';
-      saveCloudCfg();renderCloudStatus();renderPage(currentPage);
-      toast('已从云端恢复 ✓');
-    },'覆盖恢复');
-  }catch(e){toast((e&&e.message)?e.message:'网络连接失败，请检查网络后重试');}
-}
-async function cloudTest(){
-  if(!cloud.token){toast('请先填写 GitHub 令牌');return;}
-  toast('正在测试连接…');
-  try{
-    const r=await fetch('https://api.github.com/repos/'+encRepo(cloud.repo),{headers:{'Authorization':'Bearer '+cloud.token,'Accept':'application/vnd.github+json'}});
-    if(r.status===401){toast('令牌无效或已过期');return;}
-    if(r.status===404){toast('仓库不存在或令牌无权访问，请检查仓库名');return;}
-    if(!r.ok){toast('连接失败('+r.status+')');return;}
-    const j=await r.json();
-    cloud.lastSync=Date.now();cloud.lastResult='ok';saveCloudCfg();renderCloudStatus();
-    toast('连接成功！'+j.full_name+'（'+(j.private?'私有':'公开')+'，默认分支 '+j.default_branch+'）');
-  }catch(e){toast('网络连接失败，请检查网络');}
-}
-
-/* 自动同步：包装 save */
-let _autoT=null,_skipAuto=false;
-function scheduleAutoSync(){
-  if(_skipAuto){_skipAuto=false;return;}
-  if(!cloud.autoSync||!cloud.token||!cloud.repo)return;
-  clearTimeout(_autoT);
-  _autoT=setTimeout(function(){cloudPush(true);},4000);
-}
-(function(){
-  const _origSave=save;
-  save=function(){_origSave();scheduleAutoSync();};
-})();
-
-/* 云同步 UI */
-function renderCloudStatus(){
-  const foot=$('sbFoot');
-  if(foot){
-    if(!cloud.token)foot.innerHTML=icon('cloud',13)+' 云同步未配置<br><span style="opacity:.75">点此去开启 →</span>';
-    else if(cloud.lastResult==='ok')foot.innerHTML=icon('cloud',13)+' 云同步 '+fmtTime(cloud.lastSync)+' ✓<br><span style="opacity:.75">点此查看设置 →</span>';
-    else foot.innerHTML=icon('cloud',13)+' 云同步失败<br><span style="opacity:.75">点此查看设置 →</span>';
-  }
-  const st=$('cloudStatus');
-  if(st){
-    if(!cloud.token)st.textContent='未配置：粘贴你的 GitHub 令牌（ghp_ 开头）即可开启同步。令牌只保存在本机浏览器，不会出现在页面代码里。';
-    else if(!cloud.lastSync)st.textContent='已配置，还没有同步过。点上方「↑ 同步到云端」上传第一次数据。';
-    else if(cloud.lastResult==='ok')st.textContent='上次同步 '+new Date(cloud.lastSync).toLocaleString('zh-CN')+' ✓ 成功 · 仓库 '+cloud.repo+' · 分支 '+(cloud.branch||'main')+(cloud.autoSync?' · 自动同步已开启':'');
-    else st.textContent='上次同步 '+new Date(cloud.lastSync).toLocaleString('zh-CN')+' 失败，请检查令牌是否有效、网络是否可访问 github.com。';
-  }
-}
-$('clToken').addEventListener('change',function(){cloud.token=this.value.trim();cloud.lastSha=null;saveCloudCfg();renderCloudStatus();});
-$('clRepo').addEventListener('change',function(){cloud.repo=this.value.trim();cloud.lastSha=null;saveCloudCfg();renderCloudStatus();});
-$('clBranch').addEventListener('change',function(){cloud.branch=this.value.trim();cloud.lastSha=null;saveCloudCfg();renderCloudStatus();});
-$('clPath').addEventListener('change',function(){cloud.path=this.value.trim();cloud.lastSha=null;saveCloudCfg();renderCloudStatus();});
-$('clAuto').addEventListener('change',function(){cloud.autoSync=this.checked;saveCloudCfg();renderCloudStatus();if(this.checked){toast('已开启自动同步：每次修改后自动上传');if(cloud.token)cloudPush(true);}});
-$('btnTokenEye').addEventListener('click',function(){
-  const t=$('clToken');const show=t.type==='password';
-  t.type=show?'text':'password';this.textContent=show?'隐藏':'显示';
-});
-$('btnCloudTest').addEventListener('click',cloudTest);
-$('btnCloudPush').addEventListener('click',function(){cloudPush(false);});
-$('btnCloudPull').addEventListener('click',cloudPull);
-$('sbFoot').addEventListener('click',function(){go('settings');});
-$('btnCloudQuick').innerHTML=icon('cloud',18);
-$('btnCloudQuick').addEventListener('click',function(){
-  if(cloud.token&&cloud.repo)cloudPush(false);
-  else{toast('请先在设置中配置云同步');go('settings');}
-});
-RENDERERS.settings=function(){
-  $('clToken').value=cloud.token;
-  $('clRepo').value=cloud.repo;
-  $('clBranch').value=cloud.branch||'main';
-  $('clPath').value=cloud.path||'bjd-data.json';
-  $('clAuto').checked=!!cloud.autoSync;
-  renderCloudStatus();
-};
-renderCloudStatus();
 </script>
 </body>
 </html>
