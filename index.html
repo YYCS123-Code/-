@@ -49,6 +49,13 @@ ul,ol{list-style:none}
 .sidebar-item:active{transform:scale(.97);background:var(--pink-light)}
 .sidebar-item.active{background:var(--pink-bg);color:var(--pink-deep);font-weight:600}
 .sb-foot{padding:16px 10px 0;border-top:1px dashed var(--line);font-size:11px;color:var(--text-3);line-height:1.7}
+.sb-sync{margin-bottom:12px}
+.sb-sync-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:10px 12px;border-radius:12px;border:1px dashed var(--pink);background:var(--pink-bg);color:var(--pink-deep);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s ease}
+.sb-sync-btn:hover{background:var(--pink-light)}
+.sb-sync-btn:active{transform:scale(.97)}
+.sb-sync-btn.uploading{opacity:.55;pointer-events:none}
+.sb-sync-status{margin-top:7px;font-size:11px;color:var(--text-3);text-align:center;line-height:1.6}
+.sb-sync-status .ok{color:#4CAF87;font-weight:600}
 .sb-mask{display:none;position:fixed;inset:0;background:rgba(91,75,79,.35);z-index:49;opacity:0;transition:opacity .3s}
 .sb-mask.show{opacity:1}
 .mobile-bar{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px dashed var(--line);z-index:40;align-items:center;padding:0 10px;padding-top:env(safe-area-inset-top)}
@@ -368,6 +375,36 @@ ul,ol{list-style:none}
 .set-desc{font-size:12.5px;color:var(--text-2);line-height:1.8;margin-bottom:15px}
 .set-btns{display:flex;gap:12px;flex-wrap:wrap}
 .set-tip{font-size:12px;color:var(--text-3);background:var(--pink-bg);border-radius:12px;padding:11px 14px;line-height:1.8;margin-top:13px}
+.sync-mode-toggle{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--line);border-radius:99px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--text-2);cursor:pointer;transition:all .25s}
+.sync-mode-toggle:hover{border-color:var(--pink-light)}
+.sync-mode-toggle .sm-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3)}
+.sync-mode-toggle .sm-dot.on{background:var(--pink)}
+.profile-card{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.profile-left{display:flex;align-items:center;gap:14px;min-width:0}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--pink-bg);color:var(--pink);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-size:18px;font-weight:800}
+.profile-sub{font-size:12.5px;color:var(--text-2);margin-top:2px}
+.save-status{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.save-status .ss-dot{width:9px;height:9px;border-radius:50%;background:var(--text-3)}
+.save-status .ss-dot.ok{background:#7BC17E}
+.save-meta{font-size:12.5px;color:var(--text-2);margin-bottom:12px}
+.storage-line{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.storage-pct{font-size:12px;font-weight:700;color:var(--pink-deep);width:42px;text-align:right}
+.io-list{display:flex;flex-direction:column;gap:4px}
+.io-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.io-item:last-child{border-bottom:none;padding-bottom:0}
+.io-item:first-child{padding-top:0}
+.io-name{font-size:14.5px;font-weight:700;margin-bottom:2px}
+.io-desc{font-size:12px;color:var(--text-2)}
+.io-item .btn{flex-shrink:0}
+.bk-item{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--pink-bg);border-radius:14px;margin-bottom:10px}
+.bk-info{flex:1;min-width:0}
+.bk-time{font-size:14px;font-weight:700}
+.bk-meta{font-size:12px;color:var(--text-2);margin-top:2px}
+.bk-ops{display:flex;gap:6px;flex-shrink:0}
+.danger-card .io-item{border-color:#F6DDE1}
+.btn svg, .btn-icon-inline svg{width:1em;height:1em}
 .set-step{display:flex;gap:9px;margin-bottom:7px;font-size:13px;color:var(--text-2)}
 .set-step b{color:var(--pink-deep);flex-shrink:0}
 .cat-manage-row{display:flex;align-items:center;gap:11px;padding:12px 2px;border-top:1px dashed var(--line)}
@@ -425,28 +462,16 @@ ul,ol{list-style:none}
   @keyframes slideUp{from{opacity:0;transform:translateY(48px)}}
   .modal-foot{padding:13px 18px 18px}
   .set-btns .btn{flex:1;min-width:130px}
+  .profile-card{flex-direction:column;align-items:flex-start}
+  .io-item{flex-wrap:wrap;gap:10px}
+  .io-item .btn{width:100%}
+  .bk-item{flex-wrap:wrap}
+  .bk-ops{width:100%;justify-content:flex-end}
 }
 @media (min-width: 769px) and (max-width: 1024px){
   .main{padding:30px 28px 70px}
   .notes-grid{columns:2 250px}
 }
-/* ===== 云同步悬浮按钮 + 弹层 ===== */
-.cloud-fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:80}
-.cfab-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;position:relative;background:linear-gradient(135deg,var(--pink,#E58FA0),var(--pink-deep,#C67B8C));color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(198,123,140,.45);transition:transform .15s}
-.cfab-btn:active{transform:scale(.92)}
-.cfab-dot{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;border:2px solid #fff;background:#7CC46A;transition:background .2s}
-.cfab-dot.sync{background:#F5B942;animation:cloudPulse .9s infinite}
-.cfab-dot.off{background:#B0B0B0}
-@keyframes cloudPulse{50%{opacity:.35}}
-.cloud-pop{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:81;background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.18);min-width:230px;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .2s,transform .2s}
-.cloud-pop.open{opacity:1;pointer-events:auto;transform:none}
-.cp-row{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:14.5px;line-height:1.5}
-.cp-title{font-weight:700;border-bottom:1px solid var(--line);color:var(--text)}
-.cp-act{width:100%;border:none;background:none;cursor:pointer;color:var(--text);font-size:14.5px;text-align:left;font-family:inherit;min-height:44px}
-.cp-act:active{background:#F8E9EC}
-.cp-act .cp-sub{display:block;font-size:11.5px;color:var(--text-3);margin-top:2px}
-.cp-info{font-size:12px;color:var(--text-3);border-top:1px solid var(--line)}
-@media (max-width:768px){.cloud-fab{right:14px}.cloud-pop{right:12px;left:12px;min-width:0}}
 </style>
 </head>
 <body>
@@ -463,7 +488,10 @@ ul,ol{list-style:none}
     </div>
   </div>
   <nav class="sb-menu" id="sbMenu"></nav>
-  <div class="sb-foot">本机存储 + GitHub 云同步<br>记得常点云朵按钮同步备份哟</div>
+  <div class="sb-foot"><div class="sb-sync">
+    <button class="sb-sync-btn" id="btnQuickSync" title="同步到 GitHub 云端"><span id="quickSyncIcon"></span><span id="quickSyncLabel">云同步</span></button>
+    <div class="sb-sync-status" id="quickSyncStatus">未连接云端</div>
+  </div>数据存在本机 IndexedDB<br>打开自动备份 · 记得定期导出哟</div>
 </aside>
 
 <!-- 移动端顶栏 -->
@@ -503,6 +531,16 @@ ul,ol{list-style:none}
     <div class="total-label">总花费</div>
     <div class="total-num" id="totalNum">¥0</div>
     <div class="total-detail" id="totalDetail"></div>
+  </div>
+
+  <!-- 存储用量 -->
+  <div class="card" id="storageCard" style="margin-bottom:16px">
+    <div class="row-between" style="margin-bottom:10px">
+      <div class="section-title">存储用量</div>
+      <span class="tag blue" id="storageMode">IndexedDB</span>
+    </div>
+    <div class="cs-bar-wrap" style="height:8px"><div class="cs-bar" id="storageBar" style="width:0%"></div></div>
+    <div class="form-note" id="storageText" style="margin-top:9px">正在统计存储用量…</div>
   </div>
 
   <div class="func-grid">
@@ -683,79 +721,175 @@ ul,ol{list-style:none}
 
 <!-- ============ 板块七：设置 ============ -->
 <section class="page" id="page-settings">
-  <div class="page-title">设置</div>
+  <div class="page-head">
+    <div class="page-title">设置</div>
+    <div class="sync-mode-toggle" id="syncModeToggle" title="GitHub 云端同步模式">
+      <span class="sm-dot" id="syncModeDot"></span>
+      <span id="syncModeLabel">手动上传</span>
+    </div>
+  </div>
 
+  <!-- 个人资料 -->
+  <div class="set-card profile-card">
+    <div class="profile-left">
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div class="profile-info">
+        <div class="profile-name" id="profileName">一月的娃柜</div>
+        <div class="profile-sub" id="profileSub">BJD 娃娃 + 壮士业务管理台</div>
+      </div>
+    </div>
+    <button class="btn-ghost btn" id="btnEditProfile">编辑</button>
+  </div>
+
+  <!-- 本地保存 -->
   <div class="set-card">
-    <div class="set-title" data-st-icon="box">数据备份</div>
-    <div class="set-desc">所有数据仅保存在本机浏览器 localStorage 中。更换设备、清理浏览器数据前，请先导出备份文件；导入备份会覆盖当前全部数据。</div>
+    <div class="set-title" data-st-icon="floppy">本地保存（IndexedDB）</div>
+    <div class="save-status" id="saveStatus"><span class="ss-dot ok"></span> 最近保存（IndexedDB）：<span id="saveStatusText">尚未保存</span></div>
+    <div class="save-meta" id="saveMeta">当前数据：0 件衣服 · 0 只体子 · 数据大小 0 KB</div>
+    <div class="storage-line">
+      <div class="cs-bar-wrap" style="height:8px;flex:1"><div class="cs-bar" id="storageBar" style="width:0%"></div></div>
+      <div class="storage-pct" id="storagePct">0%</div>
+    </div>
+    <div class="save-meta" id="storageQuota">IndexedDB 存储用量：正在统计…</div>
+    <div class="set-btns" style="margin-top:14px">
+      <button class="btn-primary btn" id="btnSaveNow">手动保存到本机</button>
+      <button class="btn-ghost btn" id="btnReloadFromIdb">从 IndexedDB 重新读取</button>
+    </div>
+    <div class="set-tip" style="margin-top:13px">
+      <b>仅使用 IndexedDB 存储</b>：容量远超 localStorage（数百 MB~GB 级），不会静默写入失败，数据不再写入 localStorage。<br>
+      每次修改会自动保存到 IndexedDB；打开页面时从 IndexedDB 自动加载并自动备份一份快照；每 30 分钟定时备份。<br>
+      <span style="color:var(--pink-active)">注意：</span>不再使用 localStorage 存数据，旧数据会自动迁移到 IndexedDB 并清理。
+    </div>
+  </div>
+
+  <!-- 数据导入导出 -->
+  <div class="set-card">
+    <div class="set-title" data-st-icon="table">数据导入导出</div>
+    <div class="io-list">
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">一键导出 Excel</div>
+          <div class="io-desc">将全部数据（衣服/体子/毛娘）导出为 Excel 文件</div>
+        </div>
+        <button class="btn-primary btn" id="btnExportExcel">导出 Excel</button>
+      </div>
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">导出 CSV（衣服数据）</div>
+          <div class="io-desc">导出为 CSV 文件，可用 Excel/WPS 打开编辑</div>
+        </div>
+        <button class="btn-ghost btn" id="btnCsvExport">导出 CSV</button>
+      </div>
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">导入 CSV（批量录入衣服）</div>
+          <div class="io-desc">从 CSV 文件批量导入衣服数据，合并到现有数据</div>
+        </div>
+        <button class="btn-ghost btn" id="btnCsvImport">导入 CSV</button>
+      </div>
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">下载导入模板</div>
+          <div class="io-desc">下载 CSV 模板文件，填好数据后用「导入 CSV」批量录入</div>
+        </div>
+        <button class="btn-ghost btn" id="btnCsvTpl">下载模板</button>
+      </div>
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">导出全部数据备份（JSON）</div>
+          <div class="io-desc">将所有数据导出为 JSON 文件保存，文件名含日期时间戳</div>
+        </div>
+        <button class="btn-ghost btn" id="btnExport">导出</button>
+      </div>
+    </div>
+    <div class="search-row" style="margin-top:12px">
+      <select class="select" id="csvModule" style="flex:1;min-width:150px">
+        <option value="clothes">衣服</option>
+        <option value="bodies">体子</option>
+        <option value="wishlist">想买列表</option>
+        <option value="tools">壮士 · 工具</option>
+        <option value="incomes">壮士 · 收入</option>
+        <option value="orders">壮士 · 单主</option>
+      </select>
+    </div>
+    <input type="file" id="csvFile" accept=".csv,text/csv" class="hidden">
+  </div>
+
+  <!-- 备份与恢复 -->
+  <div class="set-card">
+    <div class="set-title" data-st-icon="cloud">备份与恢复</div>
+    <div class="set-desc">打开工作台时自动创建一份备份快照（存储在 IndexedDB），每 30 分钟定时备份。下方可查看备份历史、下载或恢复。</div>
     <div class="set-btns">
-      <button class="btn-primary btn" id="btnExport">导出全部数据备份</button>
-      <button class="btn-ghost btn" id="btnImport">导入备份文件</button>
+      <button class="btn-primary btn" id="btnBackupNow">立即备份</button>
+      <button class="btn-ghost btn" id="btnExportCurrent">下载当前备份</button>
+      <button class="btn-ghost btn" id="btnImportRestore">从文件恢复</button>
+      <button class="btn-ghost btn" id="btnImportMerge">合并导入</button>
       <input type="file" id="importFile" accept="application/json,.json" class="hidden">
     </div>
+    <div style="margin-top:10px"><button class="link-btn" id="btnToggleAutoDl">每日自动下载备份：已开启</button></div>
+    <div class="form-label" style="margin:18px 0 8px">备份历史</div>
+    <div id="backupList"></div>
+    <div id="lastBackupInfo" class="form-note" style="margin-top:8px"></div>
+    <div class="set-tip" style="margin-top:13px">换电脑时：在新电脑打开此页面 → 点击「从文件恢复」→ 选择之前下载的备份 JSON 文件即可恢复全部数据。</div>
   </div>
 
+  <!-- 云端同步 GitHub -->
   <div class="set-card">
-    <div class="set-title" data-st-icon="cloud">云同步（GitHub）</div>
-    <div class="set-desc">一键把全部数据（含照片）同步到你的 GitHub 仓库云端，换设备、清缓存后可随时恢复。云端数据保存在仓库文件 bjd-data.json 中。换手机时：旧设备点「上传」，新设备打开页面点「从云端恢复」即可。</div>
-    <div class="set-btns">
-      <button class="btn-primary btn" id="btnCloudUpload">上传数据到云端</button>
-      <button class="btn-ghost btn" id="btnCloudDownload">从云端恢复</button>
+    <div class="set-title" data-st-icon="github">云端同步（GitHub）</div>
+    <div class="save-status" id="githubStatus"><span class="ss-dot" id="githubStatusDot"></span> <span id="githubStatusText">未连接</span> · <span id="githubModeText">手动上传模式（点「上传到云端」按钮才上传）</span></div>
+    <div class="form-item" style="margin-top:12px">
+      <label class="form-label">GitHub 访问令牌（Token）</label>
+      <input class="input" id="ghToken" type="password" placeholder="ghp_...（github.com/settings/tokens 生成，勾选 repo 权限）">
     </div>
-    <div class="set-desc" id="cloudSyncInfo" style="margin-top:10px">尚未同步过</div>
-    <div class="set-desc" style="margin-top:10px">同步令牌（已内置默认值，可替换为你自己的细粒度令牌，仅勾选本仓库 Contents 读写权限即可，更安全）：</div>
-    <div class="set-btns">
-      <input type="text" id="cloudTokenInput" placeholder="留空 = 使用内置令牌" style="flex:1;min-width:200px;font-size:16px">
-      <button class="btn-ghost btn" id="btnCloudTokenSave">保存令牌</button>
+    <div class="form-row">
+      <div class="form-item">
+        <label class="form-label">数据仓库（用户名/仓库名）</label>
+        <input class="input" id="ghRepo" placeholder="如：YYCS123-Code/-">
+      </div>
+      <div class="form-item">
+        <label class="form-label">分支</label>
+        <input class="input" id="ghBranch" value="main">
+      </div>
     </div>
-  </div>
-
-  <div class="set-card">
-    <div class="set-title" data-st-icon="sparkles">示例数据</div>
-    <div class="set-desc">首次打开时预置的演示条目（已用示例标记区分），可以一键清除，不影响你自己录入的数据。</div>
     <div class="set-btns">
-      <button class="btn-ghost btn" id="btnClearDemo">清空示例数据</button>
+      <button class="btn-primary btn" id="btnGhUpload">上传到云端</button>
+      <button class="btn-ghost btn" id="btnGhConnect">连接云端</button>
+      <button class="btn-ghost btn" id="btnGhDisconnect">断开</button>
     </div>
-  </div>
-
-  <div class="set-card">
-    <div class="set-title" data-st-icon="gear">个性化</div>
-    <div class="set-desc">修改工作台标题，或为侧边栏菜单更换图标。</div>
-    <div class="set-btns">
-      <button class="btn-ghost btn" id="btnEditHome2">编辑标题与图标</button>
-    </div>
-  </div>
-
-  <div class="set-card">
-    <div class="set-title" data-st-icon="heart">添加到手机桌面</div>
-    <div class="set-desc">把工作台装进手机桌面，像 App 一样全屏打开：</div>
-    <div class="set-step"><b>iPhone</b><span>Safari 打开本页 → 底部分享按钮 → 「添加到主屏幕」</span></div>
-    <div class="set-step"><b>安卓</b><span>Chrome 打开本页 → 右上角菜单 → 「添加到主屏幕 / 安装应用」</span></div>
-  </div>
-
-  <div class="set-card">
-    <div class="set-title" data-st-icon="box">危险区域</div>
-    <div class="set-desc">清空本机浏览器中保存的全部数据（不可恢复，请先导出备份）。</div>
-    <div class="set-btns">
-      <button class="btn-danger btn" id="btnClearAll">清空全部数据</button>
+    <button class="btn-ghost btn btn-block" id="btnGhPull" style="margin-top:10px">从云端拉取覆盖本机</button>
+    <div class="set-tip" style="margin-top:13px">
+      使用方法：到 github.com → Settings → Developer settings → Personal access tokens 生成令牌（勾选 repo 权限），粘贴到上面点「连接云端」验证。<br>
+      令牌只保存在本机浏览器，不会写进网页或泄露；每台设备粘贴一次即可。<br>
+      <b>手动上传模式</b>：数据每次修改自动保存到本机 IndexedDB；只有点击「上传到云端」时才会上传到 GitHub 仓库的 data.json。换设备时可点「从云端拉取」恢复数据。
     </div>
   </div>
 
-  <div class="set-tip">隐私说明：本工作台在浏览器本地运行，数据默认只存在本机；只有当你主动点「云同步」时，数据才会备份到你自己的 GitHub 仓库（bjd-data.json 文件），不会经过任何第三方服务器。</div>
+  <!-- 危险操作 -->
+  <div class="set-card danger-card">
+    <div class="set-title" data-st-icon="trash">危险操作</div>
+    <div class="io-list">
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name" style="color:#E0768A">清空所有数据</div>
+          <div class="io-desc">不可恢复，请先导出备份</div>
+        </div>
+        <button class="btn-danger btn" id="btnClearAll">清空</button>
+      </div>
+      <div class="io-item">
+        <div class="io-main">
+          <div class="io-name">清空示例数据</div>
+          <div class="io-desc">仅删除首次打开时预置的演示条目</div>
+        </div>
+        <button class="btn-ghost btn" id="btnClearDemo">清空示例</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="set-tip" style="background:transparent;padding:0;color:var(--text-3)">隐私说明：本工作台完全在浏览器本地运行，数据与照片不会上传到任何服务器；公开链接仅指向页面本身。任何人拿到链接都能打开此页面并使用各自浏览器中的数据。</div>
 </section>
 
 </main>
 <div id="toast"></div>
-<!-- ============ 云同步：悬浮按钮 + 操作弹层 ============ -->
-<div class="cloud-fab">
-  <button class="cfab-btn" id="btnCloudFab" aria-label="云同步"></button>
-</div>
-<div class="cloud-pop" id="cloudPop">
-  <div class="cp-row cp-title" id="cloudPopTitle">GitHub 云同步</div>
-  <button class="cp-row cp-act" id="cpUpload">上传数据到云端</button>
-  <button class="cp-row cp-act" id="cpDownload">从云端恢复数据</button>
-  <div class="cp-row cp-info" id="cloudPopInfo">尚未同步过</div>
-</div>
 <!-- ============ 弹窗：隐私提醒（首次打开） ============ -->
 <div class="modal" id="privacyModal">
   <div class="modal-mask"></div>
@@ -763,9 +897,9 @@ ul,ol{list-style:none}
     <div class="modal-head"><div class="modal-title">隐私提醒</div></div>
     <div class="modal-body">
       <div class="form-note" style="font-size:13.5px;color:var(--text-2);line-height:2">
-        ① 本工作台完全在浏览器本地运行，你录入的数据（含照片）默认仅保存在<b style="color:var(--pink-deep)">本机浏览器的 localStorage</b> 中；点击「云同步」按钮时，数据才会备份到你自己的 GitHub 仓库；<br>
-        ② 清除浏览器缓存 / 更换设备会丢失本机数据，请定期点右下角云朵按钮同步，或到「设置 → 导出全部数据备份」；<br>
-        ③ 页面链接本身是公开的，但每个人的数据只在自己设备与自己的云端仓库里，互不可见。
+        ① 本工作台完全在浏览器本地运行，你录入的所有数据（含照片）仅保存在<b style="color:var(--pink-deep)">本机浏览器的 IndexedDB 数据库</b>中，不会上传到任何服务器；<br>
+        ② 打开工作台会自动备份，每天还会自动下载一份带时间戳的备份文件；清除浏览器缓存 / 更换设备前，也可到「设置」手动导出备份；<br>
+        ③ 页面链接本身是公开的，但每个人的数据只在自己设备上，互不可见。
       </div>
     </div>
     <div class="modal-foot">
@@ -779,13 +913,25 @@ ul,ol{list-style:none}
   <div class="modal-mask" data-close></div>
   <div class="modal-card wide">
     <div class="modal-head">
-      <div class="modal-title">编辑首页</div>
+      <div class="modal-title">编辑资料</div>
       <button class="modal-close" data-close>✕</button>
     </div>
     <div class="modal-body">
+      <div class="img-uploader" style="justify-content:center">
+        <div class="img-thumb" id="profileImgThumb" title="上传头像" style="width:90px;height:90px;border-radius:50%">
+          <img class="hidden" alt="头像预览">
+          <span class="img-remove" data-rmimg="profile">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+          </span>
+        </div>
+      </div>
       <div class="form-item">
-        <label class="form-label">首页标题</label>
+        <label class="form-label">名称</label>
         <input class="input" id="ehTitle" maxlength="20" placeholder="给娃柜起个名字…">
+      </div>
+      <div class="form-item">
+        <label class="form-label">副标题</label>
+        <input class="input" id="ehSubtitle" maxlength="40" placeholder="如：BJD 娃娃 + 毛娘业务管理台">
       </div>
       <div class="form-label" style="margin-bottom:4px">更换菜单图标（点击选择）</div>
       <div id="iconPickerRows"></div>
@@ -1230,9 +1376,14 @@ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
 'arrow-left':'<path d="M14.5 5.5 8 12l6.5 6.5"/>',
 'chev-right':'<path d="m9.5 5.5 6.5 6.5-6.5 6.5"/>',
 check:'<path d="m4.5 12.5 5 5L19.5 7"/>',
-cloud:'<path d="M7 18.5a4.5 4.5 0 0 1-.4-9A6 6 0 0 1 18.2 11a3.8 3.8 0 0 1-.7 7.5z"/>',
-'arrow-up':'<path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/>',
-'arrow-down':'<path d="M12 5v14M5.5 12.5 12 19l6.5-6.5"/>'
+download:'<path d="M12 4v11M7 10.5 12 15.5l5-5"/><path d="M4.5 19.5h15"/>',
+upload:'<path d="M12 15V4M7 8.5 12 3.5l5 5"/><path d="M4.5 19.5h15"/>',
+table:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/>',
+floppy:'<path d="M4 3h13l4 4v14H4z"/><path d="M8 3v7h8V3"/><path d="M8 21v-7h8v7"/>',
+cloud:'<path d="M18 18a4 4 0 0 0 0-8 5.5 5.5 0 0 0-9.3-1.3A4.5 4.5 0 0 0 6 17.5z"/>',
+github:'<path d="M12 2.5C6.5 2.5 2 6.9 2 12.4c0 4.3 2.7 8 6.5 9.3.5.1.7-.2.7-.5v-1.7c-2.7.6-3.2-1.1-3.2-1.1-.4-1.1-1-1.4-1-1.4-.8-.5.1-.5.1-.5.9.1 1.3.9 1.3.9.8 1.3 2 .9 2.5.7.1-.5.3-.9.5-1.1-2.1-.2-4.4-1.1-4.4-4.7 0-1 .4-1.9 1-2.5-.1-.2-.4-1.2.1-2.5 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 4.9 0c1.9-1.2 2.7-.9 2.7-.9.5 1.3.2 2.3.1 2.5.6.6 1 1.5 1 2.5 0 3.6-2.3 4.5-4.4 4.7.3.2.5.7.5 1.4v2.1c0 .3.2.6.7.5 3.8-1.3 6.5-5 6.5-9.3 0-5.5-4.5-9.9-10-9.9z"/>',
+save:'<path d="M4 17.5v-11A2.5 2.5 0 0 1 6.5 4H14l5 5v8.5A2.5 2.5 0 0 1 16.5 20h-10A2.5 2.5 0 0 1 4 17.5z"/><path d="M8 4v7h8V4"/><path d="M8 20v-7h8v7"/>',
+refresh:'<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/>'
 };
 function icon(name,size){size=size||20;return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||ICONS.flower)+'</svg>';}
 
@@ -1258,7 +1409,7 @@ function defaultState(){
   const cats=DEFAULT_CATS.map(c=>({id:'cat_'+c[0],name:c[0],visible:true,cover:'',icon:c[1],custom:false}));
   return {
     v:1,
-    settings:{title:'一月的娃柜',privacyAccepted:false,icons:{home:'home',clothes:'dress',bodies:'doll',calendar:'calendar',notes:'note',warrior:'scissors',settings:'gear'}},
+    settings:{title:'一月的娃柜',subtitle:'BJD 娃娃 + 壮士业务管理台',avatar:'',privacyAccepted:false,autoBackupDownload:true,lastAutoDl:'',lastBackupTs:0,lastSavedTs:0,github:{token:'',repo:'YYCS123-Code/-',branch:'main',autoSync:false,connectedAt:0,lastUploadAt:0},icons:{home:'home',clothes:'dress',bodies:'doll',calendar:'calendar',notes:'note',warrior:'scissors',settings:'gear'}},
     categories:cats,
     clothes:[
       {id:uid(),isDemo:true,name:'云锦马面裙',size:'1/4 适穿',shipped:false,deposit:150,balance:300,balanceDate:offsetDate(-6),fullPrice:450,catId:'cat_古风全套',note:'示例数据：预付了定金，尾款逾期啦，快去补！',image:'',paid:false,createdAt:Date.now()-9e8},
@@ -1288,13 +1439,110 @@ function normalize(s){
   ['categories','clothes','bodies','wishlist','notes','tools','incomes','orders'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=[];});
   return s;
 }
-let state=(function(){
-  try{const raw=localStorage.getItem(DB_KEY);if(raw){return normalize(JSON.parse(raw));}}catch(e){}
-  return defaultState();
-})();
+/* ---------- 存储层：IndexedDB 优先（容量大），localStorage 兜底 ---------- */
+const IDB_NAME='wb_bjd_db_v2';
+let storageMode='indexedDB',idbDb=null,lastDataSize=0;
+function openIdb(){
+  return new Promise(function(res,rej){
+    if(!window.indexedDB){rej(new Error('no idb'));return;}
+    const rq=indexedDB.open(IDB_NAME,1);
+    rq.onupgradeneeded=function(e){
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('kv'))db.createObjectStore('kv');
+      if(!db.objectStoreNames.contains('backups'))db.createObjectStore('backups');
+    };
+    rq.onsuccess=function(){res(rq.result);};
+    rq.onerror=function(){rej(rq.error||new Error('idb open fail'));};
+    rq.onblocked=function(){rej(new Error('idb blocked'));};
+  });
+}
+function idbRun(store,mode,fn){
+  return new Promise(function(res,rej){
+    if(!idbDb){rej(new Error('idb not ready'));return;}
+    let req;
+    try{
+      const tx=idbDb.transaction(store,mode);
+      req=fn(tx.objectStore(store));
+      tx.oncomplete=function(){res(req?req.result:undefined);};
+      tx.onerror=function(){rej(tx.error||new Error('idb error'));};
+      tx.onabort=function(){rej(tx.error||new Error('idb abort'));};
+    }catch(e){rej(e);}
+  });
+}
+const idbGet=function(k){return idbRun('kv','readonly',function(s){return s.get(k);});};
+const idbSet=function(k,v){return idbRun('kv','readwrite',function(s){return s.put(v,k);});};
+const idbDel=function(k){return idbRun('kv','readwrite',function(s){return s['delete'](k);});};
+const bkPut=function(b){return idbRun('backups','readwrite',function(s){return s.put(b,b.ts);});};
+const bkGet=function(ts){return idbRun('backups','readonly',function(s){return s.get(ts);});};
+const bkKeys=function(){return idbRun('backups','readonly',function(s){return s.getAllKeys();});};
+const bkDel=function(ts){return idbRun('backups','readwrite',function(s){return s['delete'](ts);});};
+const bkClear=function(){return idbRun('backups','readwrite',function(s){return s.clear();});};
+
+let state=defaultState(); /* 先用默认值占位，载入完成后替换并重新渲染 */
+function measureSize(){try{lastDataSize=new Blob([JSON.stringify(state)]).size;}catch(e){lastDataSize=0;}}
 function save(){
-  try{localStorage.setItem(DB_KEY,JSON.stringify(state));}
-  catch(e){toast('保存失败：本地存储已满，请导出备份并精简图片');}
+  measureSize();
+  state.settings.lastSavedTs=Date.now();
+  if(storageMode==='indexedDB'){
+    idbSet('state',state).catch(function(){
+      storageMode='localStorage';
+      try{localStorage.setItem(DB_KEY,JSON.stringify(state));toast('IndexedDB 写入失败，已临时改用 localStorage，请尽快导出备份');}
+      catch(e2){toast('保存失败：本地存储已满，请导出备份并精简图片');}
+    });
+  }else{
+    try{localStorage.setItem(DB_KEY,JSON.stringify(state));}
+    catch(e){toast('保存失败：本地存储已满，请导出备份并精简图片');}
+  }
+  updateStorageBar();
+  scheduleGhUpload();
+}
+function loadState(cb){
+  openIdb().then(function(db){
+    idbDb=db;
+    return idbGet('state');
+  }).then(function(saved){
+    if(saved){cb(normalize(saved),false);return;}
+    /* 旧版本数据存在 localStorage：自动迁移进 IndexedDB（原数据保留不动，不会丢） */
+    let ls=null;
+    try{const raw=localStorage.getItem(DB_KEY);if(raw)ls=normalize(JSON.parse(raw));}catch(e){}
+    if(ls){idbSet('state',ls);cb(ls,true);return;}
+    cb(null,false);
+  }).catch(function(){
+    storageMode='localStorage';
+    let ls=null;
+    try{const raw=localStorage.getItem(DB_KEY);if(raw)ls=normalize(JSON.parse(raw));}catch(e){}
+    cb(ls,false);
+  });
+}
+function fmtBytes(n){
+  if(n>=1073741824)return (n/1073741824).toFixed(2)+' GB';
+  if(n>=1048576)return (n/1048576).toFixed(2)+' MB';
+  return (n/1024).toFixed(1)+' KB';
+}
+function updateStorageBar(){
+  const bar=$('storageBar');if(!bar)return;
+  const mode=storageMode==='indexedDB'?'IndexedDB':'localStorage';
+  const stMode=$('storageMode');if(stMode)stMode.textContent=mode;
+  const c=backupCount(state);
+  const metaText='当前数据：'+state.clothes.length+' 件衣服 · '+state.bodies.length+' 只体子 · 数据大小 '+fmtBytes(lastDataSize||0);
+  const sm=$('saveMeta');if(sm)sm.textContent=metaText;
+  const sst=$('saveStatusText');if(sst)sst.textContent=state.settings.lastSavedTs?fmtTs(state.settings.lastSavedTs):'尚未保存';
+  function fallbackBar(){
+    bar.style.width='2%';
+    const st=$('storageText');if(st)st.textContent='当前数据 '+fmtBytes(lastDataSize||0)+'（浏览器未提供配额信息；IndexedDB 可用空间通常为数百 MB 以上）';
+    const sq=$('storageQuota');if(sq)sq.textContent='IndexedDB 存储用量：'+mode+'（无配额信息）';
+    const sp=$('storagePct');if(sp)sp.textContent='-';
+  }
+  if(navigator.storage&&navigator.storage.estimate){
+    navigator.storage.estimate().then(function(est){
+      const quota=est.quota||0,used=est.usage||0;
+      const pct=quota?used/quota*100:0;
+      bar.style.width=Math.max(pct,0.8)+'%';
+      const sp=$('storagePct');if(sp)sp.textContent=(pct<0.01?'<0.01':pct.toFixed(2))+'%';
+      const sq=$('storageQuota');if(sq)sq.textContent='IndexedDB 存储用量：'+fmtBytes(used)+' / '+fmtBytes(quota)+'（'+(pct<0.01?'<0.01':pct.toFixed(2))+'%）';
+      const st=$('storageText');if(st)st.innerHTML='浏览器配额已用 <b style="color:var(--pink-active)">'+fmtBytes(used)+'</b> / 约 '+fmtBytes(quota)+'（'+(pct<0.01?'<0.01':pct.toFixed(2))+'%）· 工作台数据本体 '+fmtBytes(lastDataSize||0);
+    }).catch(fallbackBar);
+  }else fallbackBar();
 }
 
 /* ==================== 工具函数 ==================== */
@@ -1355,7 +1603,7 @@ function pickImage(cb,maxW){
   });
   inp.click();
 }
-const IMG={cloth:{val:''},body:{val:''},tool:{val:''},income:{val:''},order:{val:''}};
+const IMG={cloth:{val:''},body:{val:''},tool:{val:''},income:{val:''},order:{val:''},avatar:{val:''}};
 function initImgPicker(key,thumbId){
   const thumb=$(thumbId);
   const ph=document.createElement('span');
@@ -1469,6 +1717,7 @@ RENDERERS.home=function(){
       return '<div class="cat-stat-row"><div class="cs-name" title="'+esc(r.name)+'">'+esc(r.name)+'</div><div class="cs-bar-wrap"><div class="cs-bar" style="width:'+w+'%"></div></div><div class="cs-num"><b>'+fmtMoney(r.sum)+'</b> <small>'+r.n+' 件</small></div></div>';
     }).join('');
   }
+  updateStorageBar();
 };
 </script>
 <script>
@@ -2186,18 +2435,209 @@ $('btnOrderDelete').addEventListener('click',function(){
 document.querySelectorAll('.set-title[data-st-icon]').forEach(function(el){
   el.insertAdjacentHTML('afterbegin',icon(el.dataset.stIcon,18));
 });
-RENDERERS.settings=function(){};
-$('btnExport').addEventListener('click',function(){
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  const d=new Date();
-  a.download='一月的娃柜备份-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'.json';
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
-  toast('备份文件已导出');
+/* ---------- 个人资料 ---------- */
+function renderProfileCard(){
+  const ava=$('profileAvatar');if(!ava)return;
+  if(state.settings.avatar){ava.innerHTML='<img src="'+esc(state.settings.avatar)+'" alt="">';}
+  else{ava.innerHTML=icon('doll',28);}
+  const nm=$('profileName');if(nm)nm.textContent=state.settings.title||'一月的娃柜';
+  const sub=$('profileSub');if(sub)sub.textContent=state.settings.subtitle||'BJD 娃娃 + 壮士业务管理台';
+}
+
+/* ---------- 手动保存 / 重读 ---------- */
+function saveNow(){
+  save();
+  snapshotBackup(function(){toast('已保存到本机并生成备份快照');});
+}
+function reloadFromIdb(){
+  loadState(function(loaded,migrated){
+    if(!loaded){toast('IndexedDB 中没有可读取的数据');return;}
+    state=loaded;
+    if(migrated)save();
+    measureSize();
+    renderSidebar();
+    renderPage(currentPage);
+    toast('已从 IndexedDB 重新读取');
+  });
+}
+$('btnSaveNow').addEventListener('click',saveNow);
+$('btnReloadFromIdb').addEventListener('click',reloadFromIdb);
+
+/* ---------- GitHub 云端同步 ---------- */
+function ghConnected(){
+  const g=state.settings.github||{};
+  return !!(g.token&&g.repo);
+}
+function renderGithubStatus(){
+  const g=state.settings.github||{};
+  const connected=ghConnected();
+  const stDot=$('githubStatusDot'),stText=$('githubStatusText'),modeText=$('githubModeText');
+  const smDot=$('syncModeDot'),smLabel=$('syncModeLabel');
+  if(stDot)stDot.classList.toggle('ok',connected);
+  if(stText)stText.textContent=connected?'已连接':'未连接';
+  if(modeText)modeText.textContent=g.autoSync?'自动上传模式（每次保存后自动同步到 GitHub）':'手动上传模式（点「上传到云端」按钮才上传）';
+  if(smDot)smDot.classList.toggle('on',g.autoSync);
+  if(smLabel)smLabel.textContent=g.autoSync?'自动上传':'手动上传';
+  if($('ghToken'))$('ghToken').value=g.token||'';
+  if($('ghRepo'))$('ghRepo').value=g.repo||'';
+  if($('ghBranch'))$('ghBranch').value=g.branch||'main';
+  renderQuickSync();
+}
+function ghHeaders(){
+  const g=state.settings.github||{};
+  return {'Authorization':'token '+g.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};
+}
+function ghApi(path){const g=state.settings.github||{};return 'https://api.github.com/repos/'+g.repo+'/contents/'+path;}
+function utf8ToB64(str){return btoa(unescape(encodeURIComponent(str)));}
+function b64ToUtf8(str){return decodeURIComponent(escape(atob(str)));}
+let ghUploadTimer=null;
+function scheduleGhUpload(){
+  const g=state.settings.github||{};
+  if(!g.autoSync||!g.token||!g.repo)return;
+  clearTimeout(ghUploadTimer);
+  ghUploadTimer=setTimeout(function(){ghUpload();},4000);
+}
+function ghConnect(){
+  const g=state.settings.github||{};
+  g.token=$('ghToken').value.trim();g.repo=$('ghRepo').value.trim();g.branch=($('ghBranch').value||'main').trim();
+  if(!g.token||!g.repo){toast('请先填写 Token 和仓库名');return;}
+  fetch('https://api.github.com/repos/'+g.repo,{headers:{'Authorization':'token '+g.token,'Accept':'application/vnd.github.v3+json'}}).then(function(r){
+    if(!r.ok)throw new Error('status '+r.status);
+    return r.json();
+  }).then(function(repo){
+    g.connectedAt=Date.now();
+    state.settings.github=g;save();
+    renderGithubStatus();
+    toast('GitHub 连接成功：'+repo.full_name);
+  }).catch(function(e){toast('连接失败：请检查 Token 权限和仓库名');});
+}
+function ghUpload(cb){
+  const g=state.settings.github||{};
+  if(!g.token||!g.repo){toast('请先连接 GitHub');if(cb)cb(false);return;}
+  const content=utf8ToB64(JSON.stringify(state,null,2));
+  const path='data.json';
+  fetch(ghApi(path)+'?ref='+encodeURIComponent(g.branch),{headers:ghHeaders()}).then(function(r){
+    if(r.status===404)return {sha:null};
+    if(!r.ok)throw new Error('get sha fail');
+    return r.json();
+  }).then(function(file){
+    const body=JSON.stringify({message:'BJD工作台数据备份 '+stampStr(),content:content,branch:g.branch,sha:(file&&file.sha)||undefined});
+    return fetch(ghApi(path),{method:'PUT',headers:ghHeaders(),body:body});
+  }).then(function(r){
+    if(!r.ok)throw new Error('put fail '+r.status);
+    g.lastUploadAt=Date.now();state.settings.github=g;save();
+    renderGithubStatus();
+    toast('已上传到 GitHub 云端');
+    if(cb)cb(true);
+  }).catch(function(e){toast('上传失败：'+e.message);if(cb)cb(false);});
+}
+function ghPull(){
+  const g=state.settings.github||{};
+  if(!g.token||!g.repo){toast('请先连接 GitHub');return;}
+  myConfirm('从云端拉取','将用 GitHub 上的 data.json 覆盖当前本机全部数据，确定继续吗？',function(){
+    fetch(ghApi('data.json')+'?ref='+encodeURIComponent(g.branch),{headers:ghHeaders()}).then(function(r){
+      if(!r.ok)throw new Error('fetch fail '+r.status);
+      return r.json();
+    }).then(function(file){
+      const raw=b64ToUtf8(file.content);
+      const data=JSON.parse(raw);
+      state=normalize(data);save();
+      toast('已从云端拉取，即将刷新');setTimeout(function(){location.reload();},600);
+    }).catch(function(e){toast('拉取失败：'+e.message);});
+  },'拉取覆盖');
+}
+function ghDisconnect(){
+  state.settings.github={token:'',repo:'',branch:'main',autoSync:false,connectedAt:0,lastUploadAt:0};
+  save();renderGithubStatus();
+  toast('已断开 GitHub 连接');
+}
+$('btnGhConnect').addEventListener('click',ghConnect);
+$('btnGhUpload').addEventListener('click',ghUpload);
+$('btnGhPull').addEventListener('click',ghPull);
+$('btnGhDisconnect').addEventListener('click',ghDisconnect);
+/* ---------- 侧边栏云同步快捷按钮 ---------- */
+function renderQuickSync(){
+  const btn=$('btnQuickSync');if(!btn)return;
+  const ico=$('quickSyncIcon');
+  if(ico)ico.innerHTML=icon('github',16);
+  const g=state.settings.github||{};
+  const connected=ghConnected();
+  const st=$('quickSyncStatus');
+  if(st){
+    if(!connected){st.innerHTML='未连接云端<br>点这里去设置连接';}
+    else{st.innerHTML='已连接 '+esc(g.repo)+'<br>'+(g.lastUploadAt?('上次同步 <span class="ok">'+fmtTs(g.lastUploadAt)+'</span>'):'(还没有同步过)')+' · '+(g.autoSync?'自动上传':'手动上传');}
+  }
+}
+$('btnQuickSync').addEventListener('click',function(){
+  const btn=$('btnQuickSync');
+  if(!ghConnected()){
+    go('settings');
+    setTimeout(function(){
+      const card=document.querySelector('#ghToken');
+      if(card)card.scrollIntoView({behavior:'smooth',block:'center'});
+      toast('请填写 Token 后点「连接云端」');
+    },200);
+    return;
+  }
+  btn.classList.add('uploading');$('quickSyncLabel').textContent='同步中…';
+  ghUpload(function(){
+    btn.classList.remove('uploading');$('quickSyncLabel').textContent='云同步';
+    renderQuickSync();
+  });
 });
-$('btnImport').addEventListener('click',function(){$('importFile').click();});
+$('syncModeToggle').addEventListener('click',function(){
+  const g=state.settings.github||{};
+  g.autoSync=!g.autoSync;
+  state.settings.github=g;save();
+  renderGithubStatus();
+  toast(g.autoSync?'已切换为自动上传模式':'已切换为手动上传模式');
+});
+
+RENDERERS.settings=function(){
+  refreshAutoDlBtn();
+  renderBackupList();
+  renderProfileCard();
+  renderGithubStatus();
+  updateStorageBar();
+};
+
+/* ---------- 通用下载 / 时间戳 ---------- */
+function downloadFile(name,content,mime){
+  const blob=content instanceof Blob?content:new Blob([content],{type:mime||'application/octet-stream'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){try{URL.revokeObjectURL(a.href);}catch(e){}},1000);
+}
+function stampStr(){
+  const d=new Date(),p=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());
+}
+function fmtTs(ts){
+  const d=new Date(ts),p=function(n){return String(n).padStart(2,'0');};
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
+}
+function exportJson(){
+  downloadFile((state.settings.title||'一月的娃柜')+'备份_'+stampStr()+'.json',JSON.stringify(state,null,2),'application/json');
+}
+$('btnExportCurrent').addEventListener('click',function(){exportJson();toast('当前备份文件已下载');});
+$('btnExport').addEventListener('click',function(){
+  exportJson();toast('备份文件已导出（文件名含日期时间戳）');
+});
+
+/* ---------- 备份导入：覆盖恢复 / 合并导入（保留已录入数据） ---------- */
+let importMode='replace';
+$('btnImportRestore').addEventListener('click',function(){importMode='replace';$('importFile').click();});
+$('btnImportMerge').addEventListener('click',function(){importMode='merge';$('importFile').click();});
+function mergeState(data){
+  const inc=normalize(data);
+  ['categories','clothes','bodies','wishlist','notes','tools','incomes','orders'].forEach(function(k){
+    if(!Array.isArray(inc[k])||!Array.isArray(state[k]))return;
+    inc[k].forEach(function(item){
+      if(item&&item.id&&!state[k].some(function(x){return x.id===item.id;}))state[k].push(item);
+    });
+  });
+}
 $('importFile').addEventListener('change',function(e){
   const f=e.target.files&&e.target.files[0];if(!f)return;
   const rd=new FileReader();
@@ -2205,10 +2645,18 @@ $('importFile').addEventListener('change',function(e){
     let data;
     try{data=JSON.parse(rd.result);}catch(err){toast('文件解析失败，请选择正确的备份文件');return;}
     if(!data||typeof data!=='object'||!data.settings){toast('这不是本工作台的备份文件');return;}
-    myConfirm('导入备份','导入将<b style="color:#E0768A">覆盖当前全部数据</b>（共 '+((data.clothes||[]).length)+' 件衣服、'+((data.bodies||[]).length)+' 只体子），确定继续吗？',function(){
-      state=normalize(data);save();
-      toast('备份已导入');setTimeout(function(){location.reload();},600);
-    },'覆盖导入');
+    if(importMode==='merge'){
+      myConfirm('合并导入备份','将把备份中的条目<b style="color:var(--pink-deep)">追加</b>到当前数据（共 '+((data.clothes||[]).length)+' 件衣服、'+((data.bodies||[]).length)+' 只体子），<b>已录入的数据全部保留</b>、重复条目自动跳过。确定继续吗？',function(){
+        mergeState(data);save();
+        renderSidebar();renderPage(currentPage);
+        toast('备份已合并导入，现有数据已保留');
+      },'合并导入');
+    }else{
+      myConfirm('导入备份','覆盖导入将<b style="color:#E0768A">用备份替换当前全部数据</b>（备份含 '+((data.clothes||[]).length)+' 件衣服、'+((data.bodies||[]).length)+' 只体子）。如想保留现有数据请选「合并导入」。确定覆盖吗？',function(){
+        state=normalize(data);save();
+        toast('备份已导入');setTimeout(function(){location.reload();},600);
+      },'覆盖导入');
+    }
   };
   rd.readAsText(f);
   e.target.value='';
@@ -2227,18 +2675,358 @@ $('btnClearDemo').addEventListener('click',function(){
   },'清空示例');
 });
 $('btnClearAll').addEventListener('click',function(){
-  myConfirm('清空全部数据','<b style="color:#E0768A">此操作不可恢复！</b>本机保存的全部衣服、体子、想买、便签、壮士记录都会被清空。确定要继续吗？（建议先导出备份）',function(){
-    localStorage.removeItem(DB_KEY);
+  myConfirm('清空全部数据','<b style="color:#E0768A">此操作不可恢复！</b>本机保存的全部衣服、体子、想买、便签、壮士记录及备份快照都会被清空。确定要继续吗？（建议先导出备份）',function(){
+    if(storageMode==='indexedDB'&&idbDb){
+      idbDel('state').catch(function(){});
+      bkClear().catch(function(){});
+    }
+    try{localStorage.removeItem(DB_KEY);}catch(e){}
     toast('已清空，即将刷新');setTimeout(function(){location.reload();},600);
   },'确认清空');
 });
-$('btnEditHome2').addEventListener('click',function(){openEditHomeModal();});
+$('btnEditProfile').addEventListener('click',function(){openEditHomeModal();});
+
+/* ==================== 自动备份 ==================== */
+const BACKUP_KEEP=10;
+function backupCount(d){
+  d=d||{};return ((d.clothes||[]).length+(d.bodies||[]).length+(d.wishlist||[]).length+(d.notes||[]).length+(d.tools||[]).length+(d.incomes||[]).length+(d.orders||[]).length);
+}
+function snapshotBackup(cb){
+  if(storageMode!=='indexedDB'){if(cb)cb();return;}
+  const ts=Date.now();
+  const data=JSON.parse(JSON.stringify(state));
+  const size=new Blob([JSON.stringify(data)]).size;
+  bkPut({ts:ts,data:data,size:size}).then(function(){
+    state.settings.lastBackupTs=ts;save();
+    return bkKeys();
+  }).then(function(keys){
+    if(keys&&keys.length>BACKUP_KEEP){
+      keys.sort(function(a,b){return b-a;});
+      keys.slice(BACKUP_KEEP).forEach(function(k){bkDel(k).catch(function(){});});
+    }
+    renderBackupList();
+    if(cb)cb();
+  }).catch(function(){if(cb)cb();});
+}
+function renderBackupList(){
+  const el=$('backupList');if(!el)return;
+  const info=$('lastBackupInfo');
+  if(info)info.textContent=state.settings.lastBackupTs?('上次自动备份：'+fmtTs(state.settings.lastBackupTs)+'（每次打开工作台与每 30 分钟自动快照一次）'):'还没有自动备份';
+  if(storageMode!=='indexedDB'){
+    el.innerHTML='<div class="form-note">当前浏览器不支持 IndexedDB，无法生成本地快照，请使用上方「导出全部数据备份」。</div>';
+    return;
+  }
+  bkKeys().then(function(keys){
+    keys=(keys||[]).sort(function(a,b){return b-a;});
+    if(!keys.length){el.innerHTML='<div class="form-note">暂无快照，打开本页后会自动生成。</div>';return;}
+    Promise.all(keys.map(function(k){
+      return bkGet(k).then(function(b){return {k:k,b:b};}).catch(function(){return {k:k,b:null};});
+    })).then(function(list){
+      el.innerHTML=list.map(function(x){
+        const bk=x.b||{};
+        const sz=bk.size||new Blob([JSON.stringify(bk.data||{})]).size;
+        const cnt=backupCount(bk.data);
+        return '<div class="bk-item"><div class="bk-info"><div class="bk-time">'+fmtTs(x.k)+'</div><div class="bk-meta">自动快照 · '+cnt+' 条记录 · '+fmtBytes(sz)+'</div></div><div class="bk-ops"><button class="mini-btn" data-bk="dl" data-ts="'+x.k+'" title="下载此备份文件">'+icon('download',16)+'</button><button class="mini-btn" data-bk="restore" data-ts="'+x.k+'" title="恢复此备份">'+icon('upload',16)+'</button><button class="mini-btn del" data-bk="del" data-ts="'+x.k+'" title="删除此快照">'+icon('trash',16)+'</button></div></div>';
+      }).join('');
+    });
+  }).catch(function(){el.innerHTML='<div class="form-note">快照列表读取失败，请使用「导出全部数据备份」。</div>';});
+}
+$('backupList').addEventListener('click',function(e){
+  const b=e.target.closest('[data-bk]');if(!b)return;
+  const ts=+b.dataset.ts;
+  bkGet(ts).then(function(bk){
+    if(!bk){toast('该快照不存在');renderBackupList();return;}
+    if(b.dataset.bk==='dl'){
+      downloadFile((state.settings.title||'一月的娃柜')+'备份_'+fmtTs(ts).replace(/[-: ]/g,'')+'.json',JSON.stringify(bk.data,null,2),'application/json');
+      toast('备份文件已下载');
+    }else if(b.dataset.bk==='restore'){
+      myConfirm('恢复备份','将把 '+fmtTs(ts)+' 的快照<b style="color:#E0768A">覆盖当前全部数据</b>（快照共 '+backupCount(bk.data)+' 条记录），确定恢复吗？',function(){
+        state=normalize(bk.data);save();
+        toast('已恢复，即将刷新');setTimeout(function(){location.reload();},600);
+      },'恢复');
+    }else if(b.dataset.bk==='del'){
+      bkDel(ts).then(function(){renderBackupList();toast('快照已删除');}).catch(function(){toast('删除失败');});
+    }
+  }).catch(function(){toast('读取快照失败');});
+});
+function refreshAutoDlBtn(){
+  const el=$('btnToggleAutoDl');if(!el)return;
+  el.textContent='每日自动下载备份：'+(state.settings.autoBackupDownload!==false?'已开启':'已关闭');
+}
+$('btnToggleAutoDl').addEventListener('click',function(){
+  state.settings.autoBackupDownload=state.settings.autoBackupDownload===false;
+  save();refreshAutoDlBtn();
+  toast(state.settings.autoBackupDownload?'已开启：每天首次打开自动下载备份文件':'已关闭每日自动下载（本地快照仍会自动生成）');
+});
+$('btnBackupNow').addEventListener('click',function(){
+  snapshotBackup(function(){toast('已生成本地备份快照');});
+});
+function autoBackupOnOpen(){
+  snapshotBackup();
+  const st=state.settings;
+  if(st.privacyAccepted&&st.autoBackupDownload!==false&&st.lastAutoDl!==todayStr()){
+    setTimeout(function(){
+      try{
+        exportJson();
+        state.settings.lastAutoDl=todayStr();save();
+        toast('已自动下载今日备份文件，请妥善保存');
+      }catch(e){}
+    },1800);
+  }
+  setInterval(function(){snapshotBackup();},30*60*1000); /* 每 30 分钟自动快照一份 */
+}
+
+/* ==================== CSV 批量导入 / 导出 / 模板 ==================== */
+function nz(v){const n=num(v);return n||'';}
+function normDate(v){
+  v=String(v==null?'':v).trim();
+  if(!v)return '';
+  const m=v.match(/^(\d{4})[-/年.](\d{1,2})[-/月.](\d{1,2})日?$/);
+  if(m)return m[1]+'-'+String(+m[2]).padStart(2,'0')+'-'+String(+m[3]).padStart(2,'0');
+  return v;
+}
+const CSV_MODULES={
+  clothes:{sheet:'衣服',cols:['名称','尺寸','是否已出货','定金','尾款','尾款时间','全款','分类','是否已补款','备注'],
+    demo:['云锦马面裙','1/4 适穿','是','150','300','2026-09-01','450','古风全套','否','店家与面料备注'],
+    toRow:function(c){return [c.name,c.size||'',c.shipped?'是':'否',nz(c.deposit),nz(c.balance),c.balanceDate||'',nz(c.fullPrice),catName(c.catId),c.paid?'是':'否',c.note||''];},
+    fromRow:function(r){
+      const name=String(r[0]==null?'':r[0]).trim();if(!name)return null;
+      let catId='none';
+      const cat=String(r[7]==null?'':r[7]).trim();
+      if(cat&&cat!=='未分类'){
+        const found=state.categories.find(function(c){return c.name===cat;});
+        if(found)catId=found.id;
+        else{const nc={id:uid(),name:cat,visible:true,cover:'',icon:'flower',custom:true};state.categories.push(nc);catId=nc.id;}
+      }
+      return {id:uid(),name:name,size:String(r[1]==null?'':r[1]).trim(),shipped:String(r[2]==null?'':r[2]).trim()==='是',
+        deposit:num(r[3]),balance:num(r[4]),balanceDate:normDate(r[5]),fullPrice:num(r[6]),catId:catId,
+        paid:String(r[8]==null?'':r[8]).trim()==='是',note:String(r[9]==null?'':r[9]).trim(),image:'',createdAt:Date.now()};
+    }},
+  bodies:{sheet:'体子',cols:['名称','社团/品牌','尺寸规格','肤色','价格','身高','头围','颈围','肩宽','胸围','腰围','臀围','其他','备注'],
+    demo:['小雪 1/4 女体','某娃社','1/4','白肌','1980','42','17.5','6.2','8.8','17','12.5','17.5','','入手渠道备注'],
+    toRow:function(b){return [b.name,b.brand||'',b.scale||'',b.skin||'',nz(b.price),nz(b.height),nz(b.head),nz(b.neck),nz(b.shoulder),nz(b.chest),nz(b.waist),nz(b.hip),b.stand||'',b.note||''];},
+    fromRow:function(r){
+      const name=String(r[0]==null?'':r[0]).trim();if(!name)return null;
+      return {id:uid(),name:name,brand:String(r[1]==null?'':r[1]).trim(),scale:String(r[2]==null?'':r[2]).trim(),skin:String(r[3]==null?'':r[3]).trim(),
+        price:num(r[4]),height:num(r[5]),head:num(r[6]),neck:num(r[7]),shoulder:num(r[8]),chest:num(r[9]),waist:num(r[10]),hip:num(r[11]),
+        stand:String(r[12]==null?'':r[12]).trim(),note:String(r[13]==null?'':r[13]).trim(),image:'',createdAt:Date.now()};
+    }},
+  wishlist:{sheet:'想买',cols:['名称','价格','日期','开售时间','备注'],
+    demo:['兔毛假发','150','2026-09-02','9月2日 20:00','店名备注'],
+    toRow:function(w){return [w.name,nz(w.price),w.date||'',w.saleTime||'',w.note||''];},
+    fromRow:function(r){
+      const name=String(r[0]==null?'':r[0]).trim();if(!name)return null;
+      return {id:uid(),name:name,price:num(r[1]),date:normDate(r[2]),saleTime:String(r[3]==null?'':r[3]).trim(),note:String(r[4]==null?'':r[4]).trim(),createdAt:Date.now()};
+    }},
+  tools:{sheet:'工具',cols:['名称','价格','备注'],
+    demo:['热熔胶枪','45','型号备注'],
+    toRow:function(t){return [t.name,nz(t.price),t.note||''];},
+    fromRow:function(r){
+      const name=String(r[0]==null?'':r[0]).trim();if(!name)return null;
+      return {id:uid(),name:name,price:num(r[1]),note:String(r[2]==null?'':r[2]).trim(),image:'',createdAt:Date.now()};
+    }},
+  incomes:{sheet:'收入',cols:['名称/来源','价格','备注'],
+    demo:['娃衣定制尾款','260','单主已确认'],
+    toRow:function(i){return [i.name||'',num(i.price),i.note||''];},
+    fromRow:function(r){
+      const price=num(r[1]);
+      if(price<=0)return null;
+      return {id:uid(),name:String(r[0]==null?'':r[0]).trim(),price:price,note:String(r[2]==null?'':r[2]).trim(),image:'',createdAt:Date.now()};
+    }},
+  orders:{sheet:'单主',cols:['单主名称','接单平台','单类型','价格','娃头娃社','娃头名称','娃头尺寸','需求要求'],
+    demo:['某单主','闲鱼','普单','380','某娃社','小梨花','6-7寸','自然日常妆'],
+    toRow:function(o){return [o.name,o.platform||'',o.otype||'普单',nz(o.price),o.society||'',o.headName||'',o.headSize||'',o.req||''];},
+    fromRow:function(r){
+      const name=String(r[0]==null?'':r[0]).trim();if(!name)return null;
+      const t=String(r[2]==null?'':r[2]).trim();
+      return {id:uid(),name:name,platform:String(r[1]==null?'':r[1]).trim(),otype:(t==='钞单'||t==='直送')?t:'普单',
+        price:num(r[3]),society:String(r[4]==null?'':r[4]).trim(),headName:String(r[5]==null?'':r[5]).trim(),headSize:String(r[6]==null?'':r[6]).trim(),
+        req:String(r[7]==null?'':r[7]).trim(),done:false,image:'',createdAt:Date.now()};
+    }}
+};
+function csvCell(v){
+  v=v==null?'':String(v);
+  if(/[",\r\n]/.test(v))v='"'+v.replace(/"/g,'""')+'"';
+  return v;
+}
+function toCsv(rows){return '\ufeff'+rows.map(function(r){return r.map(csvCell).join(',');}).join('\r\n');}
+function parseCsv(text){
+  text=String(text).replace(/^\ufeff/,'');
+  const rows=[];let row=[],cur='',q=false;
+  function endRow(){
+    row.push(cur);cur='';
+    if(row.some(function(c){return String(c).trim()!=='';}))rows.push(row);
+    row=[];
+  }
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){
+      if(ch==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}
+      else cur+=ch;
+    }else if(ch==='"')q=true;
+    else if(ch===','){row.push(cur);cur='';}
+    else if(ch==='\n')endRow();
+    else if(ch!=='\r')cur+=ch;
+  }
+  if(cur!==''||row.length)endRow();
+  return rows;
+}
+function readFileSmart(f,cb){
+  const rd=new FileReader();
+  rd.onload=function(){
+    if(/\uFFFD/.test(rd.result)){
+      const rd2=new FileReader();
+      rd2.onload=function(){cb(rd2.result);};
+      rd2.onerror=function(){cb(rd.result);};
+      rd2.readAsText(f,'gbk');
+    }else cb(rd.result);
+  };
+  rd.onerror=function(){toast('文件读取失败');};
+  rd.readAsText(f,'utf-8');
+}
+$('btnCsvTpl').addEventListener('click',function(){
+  const mod=CSV_MODULES[$('csvModule').value];
+  downloadFile(mod.sheet+'导入模板.csv',toCsv([mod.cols,mod.demo]),'text/csv');
+  toast('模板已下载，填好后点「导入CSV」批量录入');
+});
+$('btnCsvExport').addEventListener('click',function(){
+  const key=$('csvModule').value,mod=CSV_MODULES[key];
+  const rows=[mod.cols].concat(state[key].map(mod.toRow));
+  downloadFile(mod.sheet+'数据_'+stampStr()+'.csv',toCsv(rows),'text/csv');
+  toast(mod.sheet+'已导出 '+state[key].length+' 条');
+});
+$('btnCsvImport').addEventListener('click',function(){$('csvFile').click();});
+$('csvFile').addEventListener('change',function(e){
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const key=$('csvModule').value,mod=CSV_MODULES[key];
+  readFileSmart(f,function(text){
+    let rows;
+    try{rows=parseCsv(text);}catch(err){toast('CSV 解析失败');return;}
+    if(!rows.length){toast('文件是空的');return;}
+    if(String(rows[0][0]).trim()===mod.cols[0])rows=rows.slice(1); /* 去表头 */
+    let ok=0,skip=0;
+    rows.forEach(function(r){
+      if(!r.join('').trim())return;
+      const it=mod.fromRow(r);
+      if(it){state[key].push(it);ok++;}else skip++;
+    });
+    save();renderPage(currentPage);renderSidebar();
+    toast('导入完成：新增 '+ok+' 条'+(skip?('，跳过 '+skip+' 行（缺少必填项）'):'')+'，原有数据全部保留');
+  });
+  e.target.value='';
+});
+
+/* ==================== 一键导出 Excel（.xlsx，纯本地生成） ==================== */
+function escXml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[m];});}
+function colLetter(i){let s='';i++;while(i>0){i--;s=String.fromCharCode(65+i%26)+s;i=Math.floor(i/26);}return s;}
+const CRC_TABLE=(function(){
+  const t=[];
+  for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c>>>0;}
+  return t;
+})();
+function crc32(u8){
+  let c=0xFFFFFFFF;
+  for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);
+  return (c^0xFFFFFFFF)>>>0;
+}
+function zipStore(files){ /* files:[{name,data:Uint8Array}]，STORE 不压缩，生成合法 zip */
+  const enc=new TextEncoder();
+  const parts=[],central=[];let offset=0;
+  const d=new Date();
+  const dosTime=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+  const dosDate=(((d.getFullYear()-1980)&0x7F)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(function(f){
+    const nameB=enc.encode(f.name);
+    const crc=crc32(f.data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);
+    lh.setUint16(8,0,true); /* method 0 = store */
+    lh.setUint16(10,dosTime,true);lh.setUint16(12,dosDate,true);
+    lh.setUint32(14,crc,true);lh.setUint32(18,f.data.length,true);lh.setUint32(22,f.data.length,true);
+    lh.setUint16(26,nameB.length,true);
+    parts.push(new Uint8Array(lh.buffer),nameB,f.data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);
+    ch.setUint16(12,dosTime,true);ch.setUint16(14,dosDate,true);
+    ch.setUint32(16,crc,true);ch.setUint32(20,f.data.length,true);ch.setUint32(24,f.data.length,true);
+    ch.setUint16(28,nameB.length,true);
+    ch.setUint32(42,offset,true);
+    central.push(new Uint8Array(ch.buffer),nameB);
+    offset+=30+nameB.length+f.data.length;
+  });
+  const cdSize=central.reduce(function(s,p){return s+p.length;},0);
+  const eocd=new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0,0x06054b50,true);
+  eocd.setUint16(8,files.length,true);eocd.setUint16(10,files.length,true);
+  eocd.setUint32(12,cdSize,true);eocd.setUint32(16,offset,true);
+  return new Blob(parts.concat(central,[new Uint8Array(eocd.buffer)]),{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+function sheetXml(rows){
+  let out='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+  rows.forEach(function(row,ri){
+    out+='<row r="'+(ri+1)+'">';
+    row.forEach(function(cell,ci){
+      const ref=colLetter(ci)+(ri+1);
+      if(typeof cell==='number'&&isFinite(cell))out+='<c r="'+ref+'"><v>'+cell+'</v></c>';
+      else out+='<c r="'+ref+'" t="inlineStr"><is><t xml:space="preserve">'+escXml(cell)+'</t></is></c>';
+    });
+    out+='</row>';
+  });
+  return out+'</sheetData></worksheet>';
+}
+function exportXlsx(){
+  const ct=state.clothes.reduce(function(s,c){return s+clothTotal(c);},0);
+  const bt=state.bodies.reduce(function(s,b){return s+num(b.price);},0);
+  const tt=state.tools.reduce(function(s,t){return s+num(t.price);},0);
+  const it=state.incomes.reduce(function(s,i){return s+num(i.price);},0);
+  const ot=state.orders.reduce(function(s,o){return s+num(o.price);},0);
+  const sheets=[{name:'总览',rows:[
+    [state.settings.title||'一月的娃柜','BJD工作台数据总览'],
+    ['导出时间',fmtTs(Date.now())],
+    [],
+    ['模块','数量','金额合计（¥）'],
+    ['衣服',state.clothes.length,ct],
+    ['体子',state.bodies.length,bt],
+    ['想买列表',state.wishlist.length,state.wishlist.reduce(function(s,w){return s+num(w.price);},0)],
+    ['壮士工具',state.tools.length,tt],
+    ['壮士收入',state.incomes.length,it],
+    ['单主业务',state.orders.length,ot],
+    [],
+    ['总花费（衣服+体子+工具）',ct+bt+tt],
+    ['总收入',it]
+  ]}];
+  ['clothes','bodies','wishlist','tools','incomes','orders'].forEach(function(k){
+    const mod=CSV_MODULES[k];
+    sheets.push({name:mod.sheet,rows:[mod.cols].concat(state[k].map(mod.toRow))});
+  });
+  const enc=new TextEncoder();
+  let ctXml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>';
+  sheets.forEach(function(s,i){ctXml+='<Override PartName="/xl/worksheets/sheet'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';});
+  ctXml+='</Types>';
+  const rels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  const wb='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map(function(s,i){return '<sheet name="'+escXml(s.name)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>';}).join('')+'</sheets></workbook>';
+  let wbRels='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+  sheets.forEach(function(s,i){wbRels+='<Relationship Id="rId'+(i+1)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>';});
+  wbRels+='</Relationships>';
+  const files=[
+    {name:'[Content_Types].xml',data:enc.encode(ctXml)},
+    {name:'_rels/.rels',data:enc.encode(rels)},
+    {name:'xl/workbook.xml',data:enc.encode(wb)},
+    {name:'xl/_rels/workbook.xml.rels',data:enc.encode(wbRels)}
+  ];
+  sheets.forEach(function(s,i){files.push({name:'xl/worksheets/sheet'+(i+1)+'.xml',data:enc.encode(sheetXml(s.rows))});});
+  downloadFile((state.settings.title||'一月的娃柜')+'_全部数据_'+stampStr()+'.xlsx',zipStore(files));
+  toast('Excel 已导出（含 '+sheets.length+' 个工作表）');
+}
+$('btnExportExcel').addEventListener('click',exportXlsx);
 
 /* ==================== 首页编辑（标题 + 图标库） ==================== */
 const ICON_KEYS=['home','dress','doll','calendar','note','scissors','gear','heart','star','moon','sun','flower','bow','gift','camera','book','pencil','box','wallet','diamond','sparkles','shirt','coat','pants','shoe','eye','wig','hanfu'];
 let tempIcons={};
 function openEditHomeModal(){
   $('ehTitle').value=state.settings.title;
+  $('ehSubtitle').value=state.settings.subtitle||'';
+  IMG.avatar.set(state.settings.avatar);
   tempIcons=Object.assign({},state.settings.icons);
   renderIconPicker();
   openModal('editHomeModal');
@@ -2262,146 +3050,13 @@ $('btnEditHome').addEventListener('click',openEditHomeModal);
 $('btnEhSave').addEventListener('click',function(){
   const title=$('ehTitle').value.trim();
   if(title)state.settings.title=title;
+  state.settings.subtitle=$('ehSubtitle').value.trim();
+  state.settings.avatar=IMG.avatar.val;
   state.settings.icons=Object.assign({},tempIcons);
   save();closeModal('editHomeModal');
   renderSidebar();renderPage(currentPage);
-  toast('首页设置已保存');
+  toast('资料已保存');
 });
-
-/* ==================== 云同步（GitHub 仓库） ==================== */
-const CLOUD_CFG={
-  owner:'YYCS123-Code',
-  repo:'-',
-  branch:'main',
-  path:'bjd-data.json'
-};
-const CLOUD_TOKEN_B64='Z2hwX3lFaUNvN0hzUnN5T09ONDRsd213dkthclRhMTlwekRZVTRlaE9XQw==';/* 默认同步令牌（编码存储，可在下方设置中替换） */
-function cloudToken(){
-  const t=localStorage.getItem('wb_bjd_cloud_token');
-  if(t)return t;
-  try{return atob(CLOUD_TOKEN_B64);}catch(e){return '';}
-}
-const CLOUD_META_KEY='wb_bjd_cloud_meta_v1';
-function cloudMeta(){try{return JSON.parse(localStorage.getItem(CLOUD_META_KEY))||{};}catch(e){return{};}}
-function setCloudMeta(m){try{localStorage.setItem(CLOUD_META_KEY,JSON.stringify(m));}catch(e){}renderCloudStatus();}
-function ghApi(url,opt){
-  opt=opt||{};
-  opt.headers=Object.assign({'Authorization':'token '+cloudToken(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},opt.headers||{});
-  return fetch(url,opt);
-}
-function b64enc(str){return btoa(unescape(encodeURIComponent(str)));}
-function b64dec(b){return decodeURIComponent(escape(atob(String(b).replace(/\s/g,''))));}
-function fmtTime(ts){
-  const d=new Date(ts);
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-}
-function setCloudStatus(st,txt){
-  const fab=$('btnCloudFab');if(!fab)return;
-  let dot=fab.querySelector('.cfab-dot');
-  if(!dot){dot=document.createElement('span');dot.className='cfab-dot';fab.appendChild(dot);}
-  dot.classList.remove('sync','off');
-  if(st==='sync')dot.classList.add('sync');
-  else if(st==='off')dot.classList.add('off');
-  const info=$('cloudSyncInfo'),pinfo=$('cloudPopInfo');
-  if(txt){if(info)info.innerHTML=txt;if(pinfo)pinfo.innerHTML=txt;}
-}
-function renderCloudStatus(){
-  const m=cloudMeta();
-  const parts=[];
-  if(m.lastUpload)parts.push('上次上传：'+fmtTime(m.lastUpload));
-  if(m.lastDownload)parts.push('上次恢复：'+fmtTime(m.lastDownload));
-  const txt=parts.length?parts.join('　'):'尚未同步过，点右下角云朵按钮试试～';
-  const info=$('cloudSyncInfo'),pinfo=$('cloudPopInfo');
-  if(info)info.textContent=txt;if(pinfo)pinfo.textContent=txt;
-  setCloudStatus('ok');
-}
-let cloudBusy=false;
-async function cloudUpload(){
-  if(cloudBusy)return;
-  cloudBusy=true;setCloudStatus('sync','正在上传到云端…');
-  try{
-    let sha=null;
-    const g=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path+'?ref='+CLOUD_CFG.branch+'&t='+Date.now(),{cache:'no-store'});
-    if(g.status===200){const j=await g.json();sha=j.sha;}
-    else if(g.status!==404){throw new Error('读取云端状态失败('+g.status+')');}
-    const payload=Object.assign({},state,{cloudSavedAt:Date.now()});
-    const body={message:'云同步：更新工作台数据 '+fmtTime(Date.now()),branch:CLOUD_CFG.branch,content:b64enc(JSON.stringify(payload))};
-    if(sha)body.sha=sha;
-    const p=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!p.ok){
-      const err=await p.json().catch(function(){return{};});
-      throw new Error(err.message||('上传失败('+p.status+')'));
-    }
-    const m=cloudMeta();m.lastUpload=Date.now();setCloudMeta(m);
-    setCloudStatus('ok');
-    toast('已同步到云端 GitHub');
-  }catch(e){
-    setCloudStatus('off');
-    toast('云同步失败：'+e.message);
-  }
-  cloudBusy=false;
-}
-async function cloudDownload(){
-  if(cloudBusy)return;
-  cloudBusy=true;setCloudStatus('sync','正在读取云端数据…');
-  let savedAt=null;
-  try{
-    const g=await ghApi('https://api.github.com/repos/'+CLOUD_CFG.owner+'/'+CLOUD_CFG.repo+'/contents/'+CLOUD_CFG.path+'?ref='+CLOUD_CFG.branch+'&t='+Date.now(),{cache:'no-store'});
-    if(g.status===404){throw new Error('云端还没有备份数据，请先点「上传」');}
-    if(!g.ok)throw new Error('读取云端失败('+g.status+')');
-    const j=await g.json();
-    let data;
-    try{data=JSON.parse(b64dec(j.content));}catch(err){throw new Error('云端数据解析失败');}
-    if(!data||typeof data!=='object'||!data.settings)throw new Error('云端数据格式不正确');
-    savedAt=data.cloudSavedAt||null;
-    cloudBusy=false;setCloudStatus('ok');
-    const when=savedAt?('（云端备份时间：'+fmtTime(savedAt)+'）'):'';
-    myConfirm('从云端恢复','将用云端备份'+when+'<b style="color:#E0768A">覆盖本机当前全部数据</b>，确定继续吗？',function(){
-      state=normalize(data);save();
-      const m=cloudMeta();m.lastDownload=Date.now();setCloudMeta(m);
-      toast('已从云端恢复');setTimeout(function(){location.reload();},600);
-    },'覆盖恢复');
-    return;
-  }catch(e){
-    setCloudStatus('off');
-    toast('云同步失败：'+e.message);
-  }
-  cloudBusy=false;
-}
-/* 悬浮按钮：图标 + 状态点 + 弹层交互 */
-(function(){
-  const fab=$('btnCloudFab');
-  if(fab){
-    fab.innerHTML=icon('cloud',24)+'<span class="cfab-dot"></span>';
-    fab.addEventListener('click',function(e){
-      e.stopPropagation();
-      const pop=$('cloudPop');
-      renderCloudStatus();
-      pop.classList.toggle('open');
-    });
-  }
-  document.addEventListener('click',function(e){
-    const pop=$('cloudPop');
-    if(pop&&pop.classList.contains('open')&&!pop.contains(e.target)&&e.target!==fab&&!fab.contains(e.target)){
-      pop.classList.remove('open');
-    }
-  });
-  $('cpUpload').addEventListener('click',function(){$('cloudPop').classList.remove('open');cloudUpload();});
-  $('cpDownload').addEventListener('click',function(){$('cloudPop').classList.remove('open');cloudDownload();});
-})();
-$('btnCloudUpload').addEventListener('click',cloudUpload);
-$('btnCloudDownload').addEventListener('click',cloudDownload);
-(function(){
-  const inp=$('cloudTokenInput');
-  if(localStorage.getItem('wb_bjd_cloud_token'))inp.value=localStorage.getItem('wb_bjd_cloud_token');
-  $('btnCloudTokenSave').addEventListener('click',function(){
-    const v=inp.value.trim();
-    if(v)localStorage.setItem('wb_bjd_cloud_token',v);
-    else localStorage.removeItem('wb_bjd_cloud_token');
-    toast(v?'已保存自定义令牌':'已恢复使用内置令牌');
-  });
-})();
-renderCloudStatus();
 
 /* ==================== 初始化 ==================== */
 initImgPicker('cloth','clothImgThumb');
@@ -2409,11 +3064,23 @@ initImgPicker('body','bodyImgThumb');
 initImgPicker('tool','toolImgThumb');
 initImgPicker('income','incomeImgThumb');
 initImgPicker('order','orderImgThumb');
-renderSidebar();
-renderPage('home');
-if(!state.settings.privacyAccepted){
-  openModal('privacyModal');
-}
+initImgPicker('avatar','profileImgThumb');
+loadState(function(loaded,migrated){
+  if(loaded){
+    state=loaded;
+    if(migrated)save(); /* 旧 localStorage 数据已自动迁入 IndexedDB，原数据保留不动 */
+  }
+  measureSize();
+  renderSidebar();
+  renderPage('home');
+  refreshAutoDlBtn();
+  renderBackupList();
+  renderQuickSync();
+  if(!state.settings.privacyAccepted){
+    openModal('privacyModal');
+  }
+  autoBackupOnOpen();
+});
 $('btnPrivacyOk').addEventListener('click',function(){
   state.settings.privacyAccepted=true;save();closeModal('privacyModal');
 });
