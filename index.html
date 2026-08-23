@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="一月的娃柜">
 <meta name="theme-color" content="#C7D3DB">
 <meta name="description" content="BJD娃娃与壮士业务个人管理工作台">
-<meta name="app-version" content="2026.08.24.1">
+<meta name="app-version" content="2026.08.24.2">
 <title>一月的娃柜 · BJD工作台</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20S4 14.5 4 9.2C4 6.9 5.8 5 8 5c1.6 0 3 .9 4 2.2C13 5.9 14.4 5 16 5c2.2 0 4 1.9 4 4.2C20 14.5 12 20 12 20z' fill='%23C7D3DB'/%3E%3C/svg%3E">
 <style>
@@ -162,11 +162,6 @@ ul,ol{list-style:none}
 
 /* ============ Toast ============ */
 #toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:rgba(91,75,79,.92);color:#fff;padding:11px 22px;border-radius:99px;font-size:14px;z-index:200;opacity:0;pointer-events:none;transition:all .35s;box-shadow:0 8px 24px rgba(0,0,0,.18);max-width:86vw;text-align:center}
-#updateBanner{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-80px);background:var(--white);border:1.5px solid var(--pink);border-radius:16px;padding:12px 18px;font-size:13.5px;color:var(--text);z-index:210;display:flex;align-items:center;gap:12px;box-shadow:0 8px 28px rgba(62,54,48,.16);max-width:92vw;transition:transform .4s}
-#updateBanner.show{transform:translateX(-50%) translateY(0)}
-#updateBanner .ub-text b{color:var(--pink-deep)}
-#updateBanner .ub-btn{background:var(--pink);color:var(--text);border:none;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
-#updateBanner .ub-x{background:none;border:none;color:var(--text-3);font-size:16px;cursor:pointer;padding:2px 4px;flex-shrink:0}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ============ 勾选框 ============ */
@@ -896,11 +891,6 @@ ul,ol{list-style:none}
 
 </main>
 <div id="toast"></div>
-<div id="updateBanner">
-  <div class="ub-text">发现新版本 <b id="ubVersion"></b>，更新后链接内容即为最新</div>
-  <button class="ub-btn" id="ubRefresh">立即更新</button>
-  <button class="ub-x" id="ubClose" title="暂不更新">✕</button>
-</div>
 <!-- ============ 弹窗：隐私提醒（首次打开） ============ -->
 <div class="modal" id="privacyModal">
   <div class="modal-mask"></div>
@@ -3070,31 +3060,6 @@ $('btnEhSave').addEventListener('click',function(){
 });
 
 /* ==================== 初始化 ==================== */
-/* 版本检查：线上有新版本时提示一键刷新（仅 http/https 环境生效，本地文件自动跳过） */
-const APP_VERSION='2026.08.24.1';
-function newerVersion(remote,local){
-  const a=String(remote).split('.'),b=String(local).split('.');
-  for(let i=0;i<Math.max(a.length,b.length);i++){
-    const x=parseInt(a[i]||0,10),y=parseInt(b[i]||0,10);
-    if(x!==y)return x>y;
-  }
-  return false;
-}
-function checkUpdate(){
-  if(location.protocol!=='http:'&&location.protocol!=='https:')return;
-  fetch(location.pathname.split('#')[0].replace(/\.html?$/,'/')+(location.pathname.endsWith('/')?'':'')+'?_v='+Date.now(),{cache:'no-store'})
-    .then(function(r){if(!r.ok)throw 0;return r.text();})
-    .then(function(html){
-      const m=html.match(/name="app-version"\s+content="([^"]+)"/);
-      if(m&&newerVersion(m[1],APP_VERSION)){
-        $('ubVersion').textContent='v'+m[1];
-        $('updateBanner').classList.add('show');
-      }
-    })
-    .catch(function(){});
-}
-$('ubRefresh').addEventListener('click',function(){location.reload(true);});
-$('ubClose').addEventListener('click',function(){$('updateBanner').classList.remove('show');});
 initImgPicker('cloth','clothImgThumb');
 initImgPicker('body','bodyImgThumb');
 initImgPicker('tool','toolImgThumb');
@@ -3116,7 +3081,6 @@ loadState(function(loaded,migrated){
     openModal('privacyModal');
   }
   autoBackupOnOpen();
-  setTimeout(checkUpdate,1500);
 });
 $('btnPrivacyOk').addEventListener('click',function(){
   state.settings.privacyAccepted=true;save();closeModal('privacyModal');
